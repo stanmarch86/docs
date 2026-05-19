@@ -1,0 +1,47 @@
+---
+title: "Allgemeine Hintergrundinfos"
+description: "Datenbankstruktur, Matching-DBs und externe Datenlieferanten"
+icon: "database"
+---
+
+<Warning>
+  DB-unerfahrene Mitarbeiter müssen vor direkten Datenbankänderungen Rücksprache mit Saban, Marc, Heinze oder Philip halten.
+</Warning>
+
+## Datenbanken
+
+### HomeCourt (HC)
+
+- Auch bekannt als „oneman" DB
+- Hauptsächlich für weltfussball.de
+- Sportarten: Fußball, Basketball, Eishockey, Handball
+- Legacy-System
+
+### GlobalSports (GS)
+
+- Auch bekannt als „_17er DB"
+- Alle Sportarten
+- Einheitliche, modernisierte Datenbankstruktur
+
+## Matching-Datenbanken
+
+| DB | Name | Zweck | Schlüsselfelder |
+|---|---|---|---|
+| _18er DB | `gs_match` | GS ↔ HC IDs | `sport1_id` = GS ID, `source_id` = HC ID |
+| _19er DB | `global_sports_m` | GS ↔ externe Lieferanten | `gs_id` = GS DB ID, `source_id` = extern |
+| _20er DB | `homecourt_match` | HC ↔ externe Lieferanten | Aktuell nur Fußball / Betradar |
+
+## Datenfluss
+
+HC ↔ GS Sync läuft nahezu in Echtzeit (Sekunden).
+
+Externes Feed-Monitoring: https://c054.ims-firmen.de/intern/
+
+## Externe Datenlieferanten
+
+| Lieferant | Kontakt | Daten |
+|---|---|---|
+| IMPIRE / DELTATRE | operating@deltatre.de | bundesliga.de Ticker, Axelspringer Stats/Rankings |
+| SID | — | Texte für ILT2.x Ticker (via IMPIRE) |
+| MSPW | — | Nicht mehr aktiv |
+| Betradar | — | Nicht-Live-Ergebnisse: Ballsport, europäische Top-Ligen, Tennis (inkl. Runden/Spiele) |

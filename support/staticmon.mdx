@@ -1,0 +1,47 @@
+---
+title: "Staticmon Recovery"
+description: "Vorgehen bei einem Staticmon-Bug mit hängenden MySQL-Prozessen"
+icon: "triangle-exclamation"
+---
+
+## Symptom
+
+Staticmon hängt — MySQL-Prozesse blockieren den normalen Betrieb.
+
+## Recovery-Prozedur
+
+<Steps>
+  <Step title="MySQL-Prozesse killen">
+    Via Webinterface: https://control.ergebnis-dienst.de/intern/mysql_master_process_control.php
+
+    Alternativ über phpMyAdmin als User `oneman`.
+  </Step>
+
+  <Step title="Job-Skripte beenden (optional)">
+    Auf allen Webservern via Python Fabric:
+
+    ```bash
+    fab kill_job_loop
+    ```
+  </Step>
+
+  <Step title="SQL-Reset ausführen">
+    ```sql
+    BEGIN;
+    UPDATE `customer_job`
+    SET running = '0',
+        blocked_by_server = '',
+        blocked_with_params = '',
+        last_finished = NOW()
+    WHERE running >= '1'
+    LIMIT 100;
+
+    TRUNCATE TABLE `job_queue`;
+    COMMIT;
+    ```
+  </Step>
+
+  <Step title="Ergebnis prüfen">
+    Systemstatus verifizieren und sicherstellen, dass Jobs wieder normal laufen.
+  </Step>
+</Steps>

@@ -1,0 +1,91 @@
+---
+title: "Bekannte Bugs & Lösungen"
+description: "Aufgetretene Bugs und deren Lösungswege"
+icon: "bug"
+---
+
+## APA Liveticker — Tickermaske hängt
+
+**Ursache:** Illegale Zeichen (z. B. doppelte Anführungszeichen) im Feed.
+
+**Lösung:**
+1. JSON aufrufen → Debug-Modus XML aktivieren
+2. Ungültige Position im Feed finden
+3. Zeichen in der DB-Tabelle `liveticker` (DB_17) entfernen oder escapen
+
+Referenz-Ticket: #6102
+
+---
+
+## Sport1 — Sport1.FM Streaming-URLs
+
+Streaming-URLs werden als `match_meta`-Einträge mit `provider_id=10` gespeichert.
+
+| Fall | Einträge |
+|---|---|
+| Einzelspiel | 2x „single-url" mit „...24_7..." URL |
+| Mehrere Spiele | 2x „single-url" + 2x „conference-url" |
+
+---
+
+## Axelspringer Print / BZ Print — Tabellen erneut anfordern
+
+1. SFTP zu `in.ergebnis-dienst.de`
+2. Pfad: `/srv/www/wf.sport1.de/srv/staticmon/generated/bz_print/nit`
+3. `*.NIT`-Datei löschen
+4. Empfänger benachrichtigen
+
+**Tabellen nach Re-Trigger nicht verfügbar:** Dateien per FTP löschen (Zugangsdaten: Dokument #102), Cron regeneriert automatisch.
+
+---
+
+## BILD Print
+
+**Self-Service-Admin:** http://admin.homecourt.de/admin_bild/  
+(Bereiche: Übertragung / Übertragung Zusatzligen / Übertragung BamS)
+
+| Problem | Lösung |
+|---|---|
+| Fehlende Teams | `team` + `rel_season_team` in GS DB prüfen; Daten-Re-Transfer triggern |
+| Fehlende Nachholspiele | Spiel auf heute verschieben, korrekten Spieltag setzen, Tabelle re-triggern |
+| Ticker-Textkorrektur | Tabelle `liveticker_i18n` (`id`, `locale_id=1`, `provider_id=7`, `tickertext`) |
+| Passwortanfragen | Klotmann oder Yildirim bei BILD kontaktieren |
+
+---
+
+## Homecourt-Admin (außer Fußball) — Falscher Spielstand
+
+**Fix in `X_Ergebnisse`** (1er-DB / oneman): `tore`-Spalte aktualisieren.
+
+`wo`-Werte:
+- `1` = Heimmannschaft
+- `2` = Auswärtsmannschaft
+- `3` = none_home
+- `4` = none_away
+
+GS-Anpassung nötig: GS-Admin nutzen. Sonderfall: `gespielt=0` + `finished=no` in `X_Spiele` / Match setzen.
+
+---
+
+## Job hängt — Voetball.nl
+
+In `job_queue` (Staticmon): hängenden Job mit `job_id=300` finden, `done=yes`, `running=no` setzen.
+
+In `customer_job`: `blocked_by_server`, `blocked_with_params` leeren, `running=0` setzen.
+
+---
+
+## ran.de — TV-Coverage nicht angezeigt
+
+Kunden-Link wird als `match_meta`-Eintrag pro `match_id` gespeichert. XML-Ausgabe muss dieses Feld einschließen.
+
+---
+
+## European League of Football (ELF) — Ergebnisse laufen nicht ein
+
+**Prüfen:** https://europeanleague.football/schedule auf „Waiting for Datafeed..." checken.
+
+Alternativ via FTP prüfen ob Quell-XML vorhanden (Referenz: #39012).
+
+Falls Daten vorhanden aber nicht verarbeitet:
+- Job 622 (Download) oder Job 623 (Verarbeitung) hängt → zurücksetzen

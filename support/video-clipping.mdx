@@ -1,0 +1,66 @@
+---
+title: "Video Clipping Workflow"
+description: "AWS-basierter Workflow für ARD und ZDF Video-Clipping"
+icon: "video"
+---
+
+<Note>
+  ARD-Import läuft aktuell nicht. ARD und ZDF nutzen unterschiedliche Workflows.
+</Note>
+
+## Datenbanktabellen
+
+| Tabelle | Beschreibung |
+|---|---|
+| `vidmon.aws_channel` | AWS-Settings, Status und Aktionen für Channels, Inputs, Outputs |
+| `vidmon.entry_meta` | Metadaten für `livestream_start` / `livestream_end` |
+
+## AWS-Module
+
+### MediaLive
+- **Channels:** Weisen Input-Streams zu
+- **Inputs:** Eingehende Streams (meist `.m3u8` URLs)
+
+### MediaPackage
+- **Channels:** Output mit Endpoints
+- **Endpoints:** Ausgehende Streams
+
+## Import-Queries (Staticmon)
+
+**ARD:**
+```sql
+SELECT * FROM customer_job
+WHERE job_key LIKE '%vidmon_ard_sophora%'
+```
+
+**ZDF:**
+```sql
+SELECT * FROM customer_job
+WHERE job_key LIKE '%soph%'
+```
+
+## Channel-Automatik
+
+```sql
+SELECT * FROM customer_job WHERE job_key LIKE '%vidmon_aws%'
+```
+
+Relevante Skripte:
+- `vidmon/import/jobs/aws-control/control.php` — CRUD für `entry`, `entry_meta`, `aws_channel`
+- `vidmon/import/jobs/aws-control/check.php` — AWS-Modulsteuerung basierend auf Datenstatus
+
+### Automatisch genutzte Channels
+
+- VidmonChannel-1
+- VidmonChannel-2
+- VidmonChannel-3
+
+## AAA Admin
+
+https://admfe.vcc.heimspiel.de → Module → admin → AWS MediaLive Channels
+
+## Ad-hoc Input-URL ändern
+
+1. `aws_channel` Action und Status anpassen
+2. Channel stoppen
+3. Channel mit neuen Werten neu starten

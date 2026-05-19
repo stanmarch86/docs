@@ -1,0 +1,153 @@
+---
+title: "Liveticker läuft nicht ein"
+description: "Diagnose und Fix wenn Kunden melden, dass Liveticker-Einträge fehlen oder nicht ankommen"
+icon: "circle-exclamation"
+---
+
+<Warning>
+  Dieses Runbook gilt primär für Kunden mit **Kicker-API-Integration** (aktuell: Ringier / sport.ch).
+  Für andere Ticker-Probleme → [Bekannte Bugs & Lösungen](/support/bugs).
+</Warning>
+
+## Symptom
+
+Kunde meldet: Liveticker-Einträge für ein bestimmtes Spiel erscheinen nicht auf ihrer Plattform, obwohl das Spiel läuft.
+
+---
+
+## Checkliste: Ursachen in dieser Reihenfolge prüfen
+
+<Steps>
+
+<Step title="1. match_source vorhanden? (Kicker-Matching)">
+
+Das Spiel muss in der 19er-DB für source = 55 (Kicker) gematcht sein.
+
+```sql
+-- 19er DB
+SELECT * FROM `match`
+WHERE `gs_id` = {match_id}
+  AND `source` = 55;
+```
+
+**Fehlt der Eintrag:**
+Das Spiel ist nicht mit der Kicker-ID verknüpft → Import kann nicht starten.
+
+Prüfen ob auch Sportradar-Matching vorhanden ist:
+```sql
+-- 19er DB
+SELECT * FROM `match`
+WHERE `gs_id` = {match_id}
+  AND `source` = 89;
+```
+
+Wenn kein Matching existiert: Spiel manuell mappen oder Saban fragen.
+
+</Step>
+
+<Step title="2. match_meta tickertext_ringier = yes vorhanden?">
+
+Ohne diesen Eintrag überspringt der Import-Job das Spiel komplett.
+
+```sql
+-- 17er DB
+SELECT * FROM `match_meta`
+WHERE `match_id` = {match_id}
+  AND `provider_id` = 17
+  AND `kind` = 'tickertext_ringier';
+```
+
+**Fehlt der Eintrag:**  
+Wird normalerweise automatisch von Sabans Job angelegt — aber **nur wenn der Wettbewerb gematcht ist** (→ Schritt 3).
+
+Manuell anlegen:
+```sql
+INSERT INTO `match_meta` (`match_id`, `provider_id`, `kind`, `content`, `last_modified`)
+VALUES ({match_id}, '17', 'tickertext_ringier', 'yes', current_timestamp());
+```
+
+</Step>
+
+<Step title="3. Wettbewerb gematcht? (competition mapping)">
+
+Sabans Job legt `tickertext_ringier`-Einträge nur für Wettbewerbe an, die in seinem Job konfiguriert sind.  
+Wenn es sich um einen **neuen oder ungewöhnlichen Wettbewerb** handelt (z. B. Relegation, Barrage), ist das die häufigste Ursache.
+
+Prüfen ob der Wettbewerb (competition_id / co-ID) gematcht ist:
+- Saison ebenfalls prüfen — sie muss vermatcht sein
+- In der 19er-DB nach dem Wettbewerb suchen
+
+**Falls nicht gematcht:**  
+Saison und Wettbewerb manuell mappen lassen, dann läuft der Job beim nächsten Durchlauf automatisch.  
+In der Zwischenzeit: `match_meta` manuell anlegen (→ Schritt 2).
+
+</Step>
+
+<Step title="4. Policies vorhanden? (Autotext-Einträge)">
+
+Ohne Policies werden **keine autogenerierten Texte** für Tore, Karten, Wechsel erzeugt.
+
+Autotext-URL für das Spiel testen:
+```
+http://autotext.damon.intern.comon.vcc.heimspiel.de/de/CH/generic/ty-match_events_football/id{match_id}/sy-sportalch/
+```
+
+Wenn die URL keinen Content/Tickertext liefert: Policies fehlen oder Wettbewerb ist nicht konfiguriert.
+
+Vergleich mit einem funktionierenden Spiel desselben Wettbewerbs.
+
+</Step>
+
+<Step title="5. Import-Job läuft?">
+
+```sql
+-- 23er DB
+SELECT `id`, `job_key`, `running`, `last_finished`, `blocked_by_server`
+FROM `customer_job`
+WHERE `id` = 1313;
+```
+
+Job sollte laufen und nicht blockiert sein (`running = 0` nach Ende, kein `blocked_by_server`).
+
+Kicker-Feed für das konkrete Spiel prüfen:
+```
+https://staticmon.vcc.heimspiel.de/special/import/provider/kicker/view.php?method=getEventTicker&fixtureId={kicker_fixture_id}&contestId={contest_id}&customer_id=1
+```
+
+</Step>
+
+</Steps>
+
+---
+
+## Schnell-Fixes
+
+### Fall: Neues / nicht gematchtes Spiel kurz vor Anpfiff
+
+1. `match_meta` manuell anlegen (Schritt 2 SQL)
+2. Kunde informieren dass Import jetzt läuft
+3. Nachträglich Wettbewerb/Saison korrekt mappen lassen (für die Zukunft)
+
+### Fall: Alles korrekt, aber es kommen immer noch keine Einträge
+
+- Kicker-Feed direkt aufrufen und prüfen ob das Spiel im Feed vorhanden ist
+- Autotext-URL manuell aufrufen und Response prüfen
+- Philip oder Christof für tiefere Fehlersuche einbeziehen
+
+---
+
+## Bekannte Einschränkungen
+
+- **Event-basierte Texte** (Tore, Karten, Wechsel) kommen **nicht** aus der Kicker-API — nur `eventType.id = 25` (freie Texte). Events werden autogeneriert.
+- Wenn Kunde „Text mit Event-Verknüpfung fehlt": das ist by design — Texte werden ohne Event-Verknüpfung importiert.
+- `live_status = goals` statt `full`: autogenerierte Wechsel-/Karten-Texte fehlen.
+
+---
+
+## Referenz
+
+| | |
+|---|---|
+| Kunde | [Ringier / sport.ch](/support/kunden/ringier) |
+| Haupt-Ticket | [#59510](https://redmine.endstand.de/issues/59510) |
+| Letzter Vorfall | 18.05.2026 — FC Aarau vs. GC Zürich (Relegation, co1501 nicht gematcht) |

@@ -1,0 +1,119 @@
+---
+title: "Ringier / sport.ch"
+description: "Kicker-API Integration für Liveticker-Texte auf sport.ch und kicker.ch"
+icon: "newspaper"
+---
+
+## Ansprechpartner
+
+| Name | Funktion | Kontakt |
+|---|---|---|
+| Raphael Dort | Deputy Head of Newsroom | raphael.dort@sport.ch |
+
+**Unternehmen:** RSMG kicker Schweiz AG — sport.ch · kicker.ch
+
+---
+
+## Technische Übersicht
+
+Ringier bezieht Fußball-Liveticker-Texte über die **Kicker-API** (syndicate = `sportalch`).  
+Eishockey tickern sie weiterhin über den Heimspiel-AAA.
+
+### Schlüsselwerte
+
+| Parameter | Wert |
+|---|---|
+| syndicate | `sportalch` |
+| customer_id (Kicker-Import) | `361` |
+| customer_id (Autotext) | `278` |
+| provider_id (HS-Tickerplanung) | `17` |
+| source Kicker | `55` |
+| source Sportradar | `89` |
+| customer_job.id (Liveticker-Import) | `1313` |
+
+### match_meta Aktivierungsschlüssel
+
+Ein Spiel wird für den Kicker-Import berücksichtigt, wenn dieser Datensatz existiert:
+
+```sql
+-- Prüfen ob Spiel aktiviert ist
+SELECT * FROM `match_meta`
+WHERE `match_id` = {match_id}
+  AND `provider_id` = 17
+  AND `kind` = 'tickertext_ringier'
+  AND `content` = 'yes';
+
+-- Manuell anlegen (falls fehlend)
+INSERT INTO `match_meta` (`match_id`, `provider_id`, `kind`, `content`, `last_modified`)
+VALUES ({match_id}, '17', 'tickertext_ringier', 'yes', current_timestamp());
+```
+
+### Kicker-API Zugangsdaten
+
+```
+ClientName: HeimSpiel
+Apikey: R4bz2Lp@7nQ8XyW3
+Swagger: https://sportsfeed.kicker.de/swagger/index.html
+```
+
+---
+
+## Relevante Wettbewerbe
+
+Wettbewerbe, für die Ringier über das Kicker-Tool tickert:
+
+| Wettbewerb | Umfang |
+|---|---|
+| Super League CH | Alle Spiele |
+| Schweizer Fussball Cup | Spiele mit 1. Liga-Beteiligung |
+| UEFA Wettbewerbe mit CH-Beteiligung | Nur Männer |
+| Schweizer A-Nationalmannschaft Herren | Alle Wettbewerbe |
+| U21 Endrunde mit CH-Beteiligung | Nur CH-Spiele (z. B. U21 EM) |
+
+---
+
+## Autotext-URLs
+
+Für jedes Spiel mit `tickertext_ringier = yes` ruft der Autotext-Job drei URLs auf:
+
+```
+# Heimspiel
+http://autotext.damon.intern.comon.vcc.heimspiel.de/de/DE/generic/ty-match_events_football/id{match_id}/sy-heimspiel/
+
+# APA (AT)
+http://autotext.damon.intern.comon.vcc.heimspiel.de/de/AT/generic/ty-match_events_football/id{match_id}/sy-apa/
+
+# Ringier / sport.ch (CH)
+http://autotext.damon.intern.comon.vcc.heimspiel.de/de/CH/generic/ty-match_events_football/id{match_id}/sy-sportalch/
+```
+
+---
+
+## Wichtige Jobs
+
+```sql
+-- Kicker-Import Job prüfen
+SELECT * FROM `customer_job` WHERE `id` = 1313;
+
+-- Alle Kicker-Jobs für customer 361
+SELECT * FROM `customer_job` WHERE `customer_id` = 361;
+```
+
+---
+
+## Bekannte Einschränkungen
+
+- Event-basierte Tickertexte (Tore, Karten, Wechsel) aus der Kicker-API werden **nicht** importiert — nur `eventType.id = 25` (freie Texte).
+- Diese Events werden stattdessen über den Autotext-Generator abgedeckt.
+- Wenn `live_status = goals` statt `full`: autogenerierte Texte zu Wechseln/Karten fehlen.
+- Im AAAv1 kann `locale = de_CH` nicht gesetzt werden — es wird immer `de_DE` genommen.
+
+---
+
+## Referenz-Tickets
+
+| Ticket | Thema |
+|---|---|
+| [#59510](https://redmine.endstand.de/issues/59510) | Ringier/Kicker: Import der Liveticker-Texte über die Kicker-API (Haupt-Setup) |
+| [#59539](https://redmine.endstand.de/issues/59539) | Lösch-Job für verwaiste Liveticker-Einträge |
+| [#49235](https://redmine.endstand.de/issues/49235) | Vorläufer-Ticket (analog) |

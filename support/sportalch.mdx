@@ -1,0 +1,17 @@
+---
+title: "Sportal.ch — Import Match Meta Daten"
+description: "Import von Match-Metadaten für Sportal.ch via Staticmon"
+icon: "arrow-down-to-bracket"
+---
+
+Sportal.ch-URLs werden als `match_meta`-Einträge gespeichert und im Datencenter als Links zum jeweiligen Spiel angezeigt.
+
+## Import-Query (Staticmon, 23er DB)
+
+```sql
+SELECT *
+FROM `customer_job`
+WHERE `customer_id` = 106
+  AND `job_cmd` LIKE '%sportal%'
+ORDER BY `id` DESC
+```

@@ -1,15 +1,61 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mintlify Starter Kit",
+  "name": "Heimspiel Helpcenter",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#1D4ED8",
+    "light": "#3B82F6",
+    "dark": "#1E40AF"
   },
   "favicon": "/favicon.svg",
   "navigation": {
     "tabs": [
+      {
+        "tab": "IT Support",
+        "groups": [
+          {
+            "group": "Übersicht",
+            "pages": [
+              "support/index",
+              "support/hintergrundinfos"
+            ]
+          },
+          {
+            "group": "Schichtplanung",
+            "pages": [
+              "support/sonderschichten",
+              "support/verteilung",
+              "support/nichtverfuegbarkeit"
+            ]
+          },
+          {
+            "group": "Bugs & Lösungen",
+            "pages": [
+              "support/bugs",
+              "support/staticmon"
+            ]
+          },
+          {
+            "group": "Workflows",
+            "pages": [
+              "support/video-clipping",
+              "support/sportalch"
+            ]
+          },
+          {
+            "group": "Kunden",
+            "pages": [
+              "support/kunden/ringier"
+            ]
+          },
+          {
+            "group": "Runbooks",
+            "pages": [
+              "support/runbooks/liveticker-einlauf"
+            ]
+          }
+        ]
+      },
       {
         "tab": "Guides",
         "groups": [
