@@ -1,0 +1,51 @@
+---
+title: "MSU / DPA"
+description: "MSU SAS MSUsport Ergebnisdienst — Ergebnisse und Datenfeeds für DPA"
+icon: "signal"
+---
+
+## Ansprechpartner
+
+| Name | Funktion | Kontakt |
+|---|---|---|
+| MSU Ergebnisdienst | — | ergebnisdienst@msusport.biz |
+| Kay Hensel | DPA | kay.hensel@dpa-info.com |
+| Jens Dertmann | Heimspiel intern | — |
+
+---
+
+## Feed-URLs
+
+| Feed | URL |
+|---|---|
+| Match (einzeln) | `https://dpa-msu.json.c.ergebnis-dienst.de/match/ma{match_id}/` |
+| Match (Season-Kontext) | `https://dpa-msu.json.c.ergebnis-dienst.de/match/se{season_id}/ro{round_id}/ma{match_id}` |
+
+<Note>
+  Wenn der Match-Feed leer ist, aber der Season-Feed eine Response liefert: das ist ein Hinweis auf ein Datenproblem (z. B. fehlendes `match_date_end`), nicht auf ein Feed-Problem. Siehe [Runbook: Ergebnisse fehlen](/support/runbooks/fehlende-ergebnisse).
+</Note>
+
+---
+
+## Wettbewerbe
+
+### GFL — German Football League (American Football)
+
+- Website: https://gfl.info/
+- Unterteilung in **zwei Gruppen: Nord und Süd**, jeweils eigene Tabelle
+- Spielergebnisse laufen über den DSV-Import / SportDB
+
+---
+
+## Bekannte Eigenheiten
+
+- Zwischenergebnisse (Halbzeit etc.) können im Admin vorhanden sein, während das **Endergebnis fehlt** — Ursache ist meist ein fehlendes `match_date_end` in der SportDB (kein DSV-Import-Fehler)
+- Manuelles Nachtragen im Admin bringt keine Besserung wenn das Problem in der SportDB liegt
+
+---
+
+## Referenz-Tickets
+
+| Ticket | Thema |
+|---|---|
+| [#61826](https://redmine.endstand.de/issues/61826) | GFL: fehlende Endergebnisse (10.05.2026) — `match_date_end` fehlte in SportDB |

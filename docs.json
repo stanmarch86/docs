@@ -45,13 +45,15 @@
           {
             "group": "Kunden",
             "pages": [
-              "support/kunden/ringier"
+              "support/kunden/ringier",
+              "support/kunden/msu-dpa"
             ]
           },
           {
             "group": "Runbooks",
             "pages": [
-              "support/runbooks/liveticker-einlauf"
+              "support/runbooks/liveticker-einlauf",
+              "support/runbooks/fehlende-ergebnisse"
             ]
           }
         ]

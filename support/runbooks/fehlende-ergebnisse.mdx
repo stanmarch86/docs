@@ -1,0 +1,141 @@
+---
+title: "Ergebnisse fehlen / kein Endergebnis"
+description: "Diagnose wenn Kunden melden, dass Spielergebnisse fehlen oder nicht als beendet ankommen"
+icon: "circle-exclamation"
+---
+
+<Note>
+  Dieses Runbook gilt für Meldungen wie: „Ergebnisse fehlen", „Spiel zeigt kein Endergebnis", „Zwischenergebnis vorhanden, Endstand fehlt". Primär relevant für **MSU / DPA** (GFL, American Football), aber das Muster ist allgemein.
+</Note>
+
+## Symptom
+
+Kunde meldet: Ergebnisse eines oder mehrerer Spiele fehlen. Im Admin sind ggf. Zwischenergebnisse sichtbar, das Endergebnis kommt nicht an.
+
+---
+
+## Checkliste: Ursachen in dieser Reihenfolge prüfen
+
+<Steps>
+
+<Step title="1. Match-Feed vs. Season-Feed vergleichen">
+
+Beide Feed-URLs für das betroffene Spiel aufrufen:
+
+```
+# Match-Feed (einzeln)
+https://dpa-msu.json.c.ergebnis-dienst.de/match/ma{match_id}/
+
+# Season-Feed (mit Kontext)
+https://dpa-msu.json.c.ergebnis-dienst.de/match/se{season_id}/ro{round_id}/ma{match_id}
+```
+
+**Interpretation:**
+
+| Match-Feed | Season-Feed | Diagnose |
+|---|---|---|
+| Leer / keine Response | Liefert Daten | Datenproblem im Match-Record (→ Schritt 3) |
+| Leer | Leer | Feed-Problem oder Policy-Problem (→ Schritt 4) |
+| Liefert Daten | Liefert Daten | Problem liegt beim Kunden / Downstream |
+
+</Step>
+
+<Step title="2. DSV-Import als Ursache ausschließen">
+
+In der 17er-DB prüfen ob `match_result_at`-Einträge mit passendem Zeitstempel vorhanden sind:
+
+```sql
+-- 17er DB
+SELECT * FROM `match_result`
+WHERE `match_id` = {match_id}
+ORDER BY `last_modified` DESC;
+```
+
+Wenn Einträge mit `match_result_at = 0` und korrektem Zeitstempel (Spieltag) vorhanden sind → **DSV-Import hat geliefert**, das Problem liegt woanders.
+
+</Step>
+
+<Step title="3. SportDB: match_date_end und finished prüfen (häufigste Ursache)">
+
+<Warning>
+  Das ist die häufigste Ursache bei „Zwischenergebnis vorhanden, Endergebnis fehlt".
+</Warning>
+
+Den Match-Datensatz direkt in der 17er-DB prüfen:
+
+```sql
+-- 17er DB
+SELECT `id`, `match_date`, `match_date_end`, `finished`, `winner_team_id`, `last_modified`
+FROM `match`
+WHERE `id` = {match_id};
+```
+
+**Prüfen:**
+- `match_date_end` gesetzt? (darf nicht NULL/leer sein)
+- `finished` = `yes`?
+- `winner_team_id` gesetzt?
+
+**Wenn `match_date_end` fehlt:**  
+„Fehlt der Haken für die Endzeit, kommen die Ergebnisse nicht als beendet rein."  
+Das Endergebnis wird nicht als abgeschlossen publiziert, auch wenn Zwischenstände vorhanden sind.
+
+**Fix — manuell in SportDB setzen:**
+```sql
+-- 17er DB — nur nach Rücksprache ausführen
+UPDATE `match`
+SET `match_date_end` = '{spiel_ende_timestamp}',
+    `finished`       = 'yes',
+    `winner_team_id` = {winner_team_id},
+    `last_modified`  = NOW()
+WHERE `id` = {match_id};
+```
+
+Nach dem Update: Match-Feed erneut aufrufen und prüfen ob jetzt eine Response kommt.
+
+</Step>
+
+<Step title="4. Policy und Season-Zeiträume prüfen">
+
+Wenn Match-Feed und Season-Feed beide leer sind:
+
+- Policy für den Wettbewerb vorhanden und korrekt konfiguriert?
+- Season-Zeitraum (start/end) umschließt das Spieldatum?
+- Für die GFL: Nord- und Süd-Gruppe haben jeweils eigene Tabellen — richtige Gruppe/Season geprüft?
+
+</Step>
+
+<Step title="5. Admin-Eintrag prüfen">
+
+<Note>
+  Manuelles Nachtragen im Admin bringt **keine Besserung**, wenn das Problem in der SportDB liegt (fehlendes `match_date_end`). Erst SportDB fixen, dann ggf. Admin-Eintrag korrigieren.
+</Note>
+
+Falls nach dem SportDB-Fix noch Abweichungen im Admin sichtbar sind:  
+Prüfen ob der Admin-Eintrag auf den aktualisierten Match-Datensatz neu eingelesen wurde.
+
+</Step>
+
+</Steps>
+
+---
+
+## Schnell-Fix Zusammenfassung
+
+**Typischer Fall (GFL / American Football):**
+
+1. Match-Feed leer → Season-Feed funktioniert → Datenproblem
+2. In 17er-DB: `match_date_end` ist NULL → Spiel wird nicht als beendet markiert
+3. Fix: `match_date_end`, `finished = yes`, `winner_team_id` in der 17er-DB setzen
+4. Match-Feed erneut prüfen → sollte jetzt Response liefern
+
+---
+
+## Referenz
+
+| | |
+|---|---|
+| Kunde | [MSU / DPA](/support/kunden/msu-dpa) |
+| Letzter Vorfall | 10.05.2026 — GFL: FC Aarau vs. GC (Ticket [#61826](https://redmine.endstand.de/issues/61826)) |
+| Gemeldetes Symptom | Zwischenergebnisse vorhanden, Endergebnisse fehlen |
+| Ursache | `match_date_end` fehlte in SportDB |
+| Fix | `match_date_end`, `finished=yes`, `winner_team_id` manuell gesetzt |
