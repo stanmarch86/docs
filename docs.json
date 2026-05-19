@@ -21,14 +21,6 @@
             ]
           },
           {
-            "group": "Schichtplanung",
-            "pages": [
-              "support/sonderschichten",
-              "support/verteilung",
-              "support/nichtverfuegbarkeit"
-            ]
-          },
-          {
             "group": "Bugs & Lösungen",
             "pages": [
               "support/bugs",
