@@ -1,0 +1,258 @@
+---
+title: "Match Events"
+description: "match_event_type Referenz für Fußball (sport_id = 1)"
+icon: "bolt"
+---
+
+Alle Event-Typen sind über `action` + `kind` eindeutig identifiziert. Die `kind`-Werte sind pro `action` nummeriert und beginnen meist bei `0`.
+
+## playing — Aufstellung & Wechsel
+
+| `kind` | `name` |
+|---|---|
+| `0` | lineup |
+| `1` | substitute-in |
+| `2` | substitute-out |
+| `3` | bench |
+
+## match — Spielverlauf
+
+| `kind` | `name` |
+|---|---|
+| `0` | game-start |
+| `1` | first-half-end |
+| `2` | second-half-start |
+| `3` | second-half-end |
+| `4` | first-extra-start |
+| `5` | first-extra-end |
+| `6` | second-extra-start |
+| `7` | second-extra-end |
+| `8` | penalty-start |
+| `9` | game-end |
+
+## goal — Tor
+
+| `kind` | `name` |
+|---|---|
+| `0` | goal |
+| `1` | penalty |
+| `2` | right-foot |
+| `3` | left-foot |
+| `4` | direct-free-kick |
+| `5` | free-kick |
+| `6` | head |
+| `7` | own-goal |
+| `8` | back-heel |
+| `9` | overhead-kick |
+
+## goal_disallowed — Aberkanntes Tor
+
+| `kind` | `name` |
+|---|---|
+| `0` | goal-disallowed |
+| `1` | offside |
+| `2` | foul |
+| `3` | var-offside |
+| `4` | var-foul |
+
+## card — Karten
+
+| `kind` | `name` |
+|---|---|
+| `0` | yellow |
+| `1` | yellow-red |
+| `2` | red |
+| `3` | yellow *(Duplikat — selber Wert wie kind=0)* |
+
+## pso — Elfmeterschießen
+
+| `kind` | `name` |
+|---|---|
+| `0` | goal |
+| `1` | miss |
+
+## special
+
+| `kind` | `name` |
+|---|---|
+| `0` | missed-penalty |
+| `1` | sent-to-tribune |
+| `2` | additional-time |
+
+## var — Video Assistant Referee
+
+| `kind` | `name` |
+|---|---|
+| `0` | goal-pending |
+| `1` | goal |
+| `2` | no-goal |
+| `3` | penalty-pending |
+| `4` | penalty |
+| `5` | no-penalty |
+| `6` | red-card-pending |
+| `7` | red-card |
+| `8` | no-red-card |
+| `9` | red-card-identity |
+
+## foul
+
+| `kind` | `name` |
+|---|---|
+| `0` | foul |
+| `1` | hand-ball |
+| `2` | offside |
+| `3` | rough-foul |
+
+## free_kick
+
+| `kind` | `name` |
+|---|---|
+| `0` | free-kick |
+| `1` | big-chance |
+| `2` | on-goal |
+| `3` | on-post |
+| `4` | on-bar |
+| `5` | miss-over |
+| `6` | miss-side |
+
+## corner
+
+| `kind` | `name` |
+|---|---|
+| `0` | corner |
+| `1` | left |
+| `2` | right |
+
+## throw_in
+
+| `kind` | `name` |
+|---|---|
+| `0` | throw-in |
+| `1` | own-half |
+| `2` | opposite-half |
+| `3` | offensive-left |
+| `4` | offensive-right |
+
+## goalie — Torwart-Aktionen
+
+| `kind` | `name` |
+|---|---|
+| `0` | save |
+| `1` | super-save |
+| `2` | fail |
+| `3` | goal-kick |
+| `4` | throw |
+| `5` | punt |
+| `6` | clerance |
+
+## shot_inside_box
+
+| `kind` | `name` |
+|---|---|
+| `0` | shot-inside-box |
+| `1` | big-chance |
+| `2` | on-goal |
+| `3` | on-post |
+| `4` | on-bar |
+| `5` | miss-over |
+| `6` | miss-side |
+
+## shot_outside_box
+
+| `kind` | `name` |
+|---|---|
+| `0` | shot-outside-box |
+| `1` | big-chance |
+| `2` | on-goal |
+| `3` | on-post |
+| `4` | on-bar |
+| `5` | miss-over |
+| `6` | miss-side |
+
+## header
+
+| `kind` | `name` |
+|---|---|
+| `0` | header |
+| `1` | big-chance |
+| `2` | on-goal |
+| `3` | on-post |
+| `4` | on-bar |
+| `5` | miss-over |
+| `6` | miss-side |
+
+## volley
+
+| `kind` | `name` |
+|---|---|
+| `0` | volley |
+| `1` | big-chance |
+| `2` | on-goal |
+| `3` | on-post |
+| `4` | on-bar |
+| `5` | miss-over |
+| `6` | miss-side |
+
+## highlight
+
+| `kind` | `name` |
+|---|---|
+| `0` | highlight |
+| `1` | dribbling |
+| `2` | pass |
+| `3` | team-attack |
+| `4` | tackling |
+| `5` | block |
+| `6` | clearance |
+| `7` | injury |
+| `8` | fail |
+| `9` | dive |
+
+## referee
+
+| `kind` | `name` |
+|---|---|
+| `0` | other-action |
+| `1` | substitute-in |
+| `2` | substitute-out |
+| `3` | interruption-start |
+| `4` | interruption-end |
+
+## emotion
+
+| `kind` | `name` |
+|---|---|
+| `0` | happy |
+| `1` | sad |
+| `2` | angry |
+| `3` | euphoric |
+| `4` | goal-celebration |
+
+## fans
+
+| `kind` | `name` |
+|---|---|
+| `0` | fans |
+| `1` | happy |
+| `2` | sad |
+| `3` | angry |
+| `4` | euphoric |
+| `5` | choreo |
+| `6` | chant |
+| `7` | attendance |
+
+## video
+
+| `kind` | `name` |
+|---|---|
+| `0` | *(leer)* |
+
+## DB-Abfrage
+
+```sql
+select s.name, mr.sport_id, mr.action, mr.kind, mr.name
+from db127096_17.match_event_type mr
+left join db127096_17.sport s on s.id = mr.sport_id
+where mr.sport_id = 1
+order by mr.action, mr.kind;
+```

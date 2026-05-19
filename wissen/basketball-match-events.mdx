@@ -1,0 +1,94 @@
+---
+title: "Match Events"
+description: "match_event_type Referenz für Basketball (sport_id = 2)"
+icon: "bolt"
+---
+
+Alle Event-Typen sind über `action` + `kind` eindeutig identifiziert.
+
+## playing — Aufstellung & Wechsel
+
+| `kind` | `name` |
+|---|---|
+| `0` | startingfive |
+| `1` | substitute-in |
+| `2` | substitute-out |
+| `3` | bench |
+| `4` | bench-dnp |
+
+## match — Spielverlauf
+
+| `kind` | `name` |
+|---|---|
+| `0` | game-start |
+| `1` | first-quarter-end |
+| `2` | second-quarter-start |
+| `3` | second-quarter-end |
+| `4` | third-quarter-start |
+| `5` | third-quarter-end |
+| `6` | fourth-quarter-start |
+| `7` | fourth-quarter-end |
+| `8` | extra-time-start |
+| `9` | game-end |
+
+## goal — Punkte
+
+| `kind` | `name` |
+|---|---|
+| `0` | goal |
+| `1` | freethrow |
+| `2` | fieldgoal-2pt |
+| `3` | fieldgoal-3pt |
+| `4` | fieldgoal-dunk-2pt |
+
+## miss — Fehlwürfe
+
+| `kind` | `name` |
+|---|---|
+| `0` | shot-missed |
+| `1` | shot-freethrow-missed |
+| `2` | shot-2pt-missed |
+| `3` | shot-3pt-missed |
+| `4` | shot-dunk-2pt-missed |
+
+## foul
+
+| `kind` | `name` |
+|---|---|
+| `0` | personal |
+| `1` | offensive |
+| `2` | technical |
+| `3` | flagrant-1 |
+| `4` | flagrant-2 |
+
+## action
+
+| `kind` | `name` |
+|---|---|
+| `0` | jumpball |
+| `1` | turnover |
+| `2` | rebound-offensive |
+| `3` | rebound-defensive |
+
+## penalty
+
+| `kind` | `name` |
+|---|---|
+| `0` | ejection |
+
+## timeout
+
+| `kind` | `name` |
+|---|---|
+| `0` | regular |
+| `1` | official |
+
+## DB-Abfrage
+
+```sql
+select s.name, mr.sport_id, mr.action, mr.kind, mr.name
+from db127096_17.match_event_type mr
+left join db127096_17.sport s on s.id = mr.sport_id
+where mr.sport_id = 2
+order by mr.action, mr.kind;
+```

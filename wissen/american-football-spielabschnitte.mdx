@@ -1,0 +1,31 @@
+---
+title: "Spielabschnitte & Ergebnistypen"
+description: "match_result_at Referenz für American Football (sport_id = 16)"
+icon: "clock"
+---
+
+Die Tabelle `match_result_at` definiert, welche Zwischenstände und Endergebnisse für eine Sportart geliefert werden. Der Wert `match_result_at` identifiziert den Spielabschnitt.
+
+## American Football (`sport_id = 16`)
+
+| `match_result_at` | Name | Kürzel |
+|---|---|---|
+| `0` | Endergebnis | Ergebnis |
+| `1` | 1. Viertel | 1. |
+| `2` | 2. Viertel | 2. |
+| `3` | 3. Viertel | 3. |
+| `4` | 4. Viertel | 4. |
+| `21` | Overtime | OT |
+
+<Note>
+  `match_result_at = 21` erscheint nur bei Overtime. Reguläre Spiele enden mit `match_result_at = 4`.
+</Note>
+
+## DB-Abfrage
+
+```sql
+select s.name, mr.sport_id, mr.match_result_at, mr.name, mr.shortname
+from db127096_17.match_result_at mr
+left join db127096_17.sport s on s.id = mr.sport_id
+where mr.sport_id = 16;
+```

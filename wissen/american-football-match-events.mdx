@@ -1,0 +1,72 @@
+---
+title: "Match Events"
+description: "match_event_type Referenz für American Football (sport_id = 16)"
+icon: "bolt"
+---
+
+Alle Event-Typen sind über `action` + `kind` eindeutig identifiziert.
+
+## match — Spielverlauf
+
+| `kind` | `name` |
+|---|---|
+| `0` | game-start |
+| `1` | first-quarter-end |
+| `2` | second-quarter-start |
+| `3` | second-quarter-end |
+| `4` | third-quarter-start |
+| `5` | third-quarter-end |
+| `6` | fourth-quarter-start |
+| `7` | fourth-quarter-end |
+| `8` | extra-time-start |
+| `9` | game-end |
+
+## goal — Punkte
+
+| `kind` | `name` |
+|---|---|
+| `0` | touchdown |
+| `1` | extrakick |
+| `2` | two-point-conversion |
+| `3` | fieldgoal |
+| `4` | safety |
+| `5` | def-two-point-conversion |
+| `6` | undefined |
+
+## special — Fehlversuche
+
+| `kind` | `name` |
+|---|---|
+| `0` | extrakick_missed |
+| `1` | two-point-conversion_missed |
+| `2` | fieldgoal_missed |
+
+## action
+
+| `kind` | `name` |
+|---|---|
+| `0` | pass |
+| `1` | catch |
+| `2` | fumble |
+| `3` | sack |
+| `4` | team-attack |
+| `5` | tackling |
+
+## highlight
+
+| `kind` | `name` |
+|---|---|
+| `0` | game-highlights |
+| `1` | highlight |
+| `2` | fail |
+| `4` | injury |
+
+## DB-Abfrage
+
+```sql
+select s.name, mr.sport_id, mr.action, mr.kind, mr.name
+from db127096_17.match_event_type mr
+left join db127096_17.sport s on s.id = mr.sport_id
+where mr.sport_id = 16
+order by mr.action, mr.kind;
+```

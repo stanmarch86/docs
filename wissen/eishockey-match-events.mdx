@@ -1,0 +1,88 @@
+---
+title: "Match Events"
+description: "match_event_type Referenz für Eishockey (sport_id = 4)"
+icon: "bolt"
+---
+
+Alle Event-Typen sind über `action` + `kind` eindeutig identifiziert.
+
+## playing — Aufstellung & Wechsel
+
+| `kind` | `name` |
+|---|---|
+| `0` | lineup |
+| `1` | substitute-in |
+| `2` | substitute-out |
+| `3` | bench |
+
+## match — Spielverlauf
+
+| `kind` | `name` |
+|---|---|
+| `0` | game-start |
+| `1` | first-third-end |
+| `2` | second-third-start |
+| `3` | second-third-end |
+| `4` | third-third-start |
+| `5` | third-third-end |
+| `6` | overtime-start |
+| `7` | overtime-end |
+| `8` | penalty-start |
+| `9` | game-end |
+
+## goal — Tor
+
+| `kind` | `name` |
+|---|---|
+| `0` | goal |
+| `1` | penalty |
+| `2` | slapshot |
+| `3` | wrist-shot |
+| `4` | one-timer |
+| `5` | empty-net |
+| `6` | short-handed |
+| `8` | powerplay |
+
+## assist
+
+| `kind` | `name` |
+|---|---|
+| `0` | first-assist |
+| `1` | second-assist |
+
+## penalty — Strafen
+
+| `kind` | `name` |
+|---|---|
+| `0` | minor |
+| `1` | double-minor |
+| `2` | minor-misconduct |
+| `3` | major |
+| `4` | misconduct |
+| `5` | match |
+| `6` | first-major |
+| `7` | team-minor |
+
+## pso — Penaltyschießen
+
+| `kind` | `name` |
+|---|---|
+| `0` | goal |
+| `1` | miss |
+
+## special
+
+| `kind` | `name` |
+|---|---|
+| `0` | missed-penalty |
+| `1` | sent-to-tribune |
+
+## DB-Abfrage
+
+```sql
+select s.name, mr.sport_id, mr.action, mr.kind, mr.name
+from db127096_17.match_event_type mr
+left join db127096_17.sport s on s.id = mr.sport_id
+where mr.sport_id = 4
+order by mr.action, mr.kind;
+```

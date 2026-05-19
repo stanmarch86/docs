@@ -1,0 +1,32 @@
+---
+title: "Spielabschnitte & Ergebnistypen"
+description: "match_result_at Referenz für Eishockey (sport_id = 4)"
+icon: "clock"
+---
+
+Die Tabelle `match_result_at` definiert, welche Zwischenstände und Endergebnisse für eine Sportart geliefert werden. Der Wert `match_result_at` identifiziert den Spielabschnitt.
+
+## Eishockey (`sport_id = 4`)
+
+| `match_result_at` | Name | Kürzel |
+|---|---|---|
+| `0` | Endergebnis | Ergebnis |
+| `1` | 1. Drittel | 1. |
+| `2` | 2. Drittel | 2. |
+| `3` | 3. Drittel | 3. |
+| `21` | Verlängerung | OT |
+| `22` | 2. Verlängerung | 2OT |
+| `23` | 3. Verlängerung | 3OT |
+
+<Note>
+  Eishockey ist die einzige Sportart mit mehrfachen Verlängerungen (`22`, `23`). Diese erscheinen in Playoff-Spielen ohne Penalty-Shootout-Regelung.
+</Note>
+
+## DB-Abfrage
+
+```sql
+select s.name, mr.sport_id, mr.match_result_at, mr.name, mr.shortname
+from db127096_17.match_result_at mr
+left join db127096_17.sport s on s.id = mr.sport_id
+where mr.sport_id = 4;
+```
