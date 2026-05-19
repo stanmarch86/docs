@@ -13,7 +13,7 @@ icon: "bug"
 2. Ungültige Position im Feed finden
 3. Zeichen in der DB-Tabelle `liveticker` (DB_17) entfernen oder escapen
 
-Referenz-Ticket: #6102
+Referenz-Ticket: [#6102](https://redmine.endstand.de/issues/6102)
 
 ---
 
@@ -85,7 +85,166 @@ Kunden-Link wird als `match_meta`-Eintrag pro `match_id` gespeichert. XML-Ausgab
 
 **Prüfen:** https://europeanleague.football/schedule auf „Waiting for Datafeed..." checken.
 
-Alternativ via FTP prüfen ob Quell-XML vorhanden (Referenz: #39012).
+Alternativ via FTP prüfen ob Quell-XML vorhanden (Referenz: [#39012](https://redmine.endstand.de/issues/39012)).
 
 Falls Daten vorhanden aber nicht verarbeitet:
 - Job 622 (Download) oder Job 623 (Verarbeitung) hängt → zurücksetzen
+
+---
+
+## Comon (AWS) — Max-Instanzen-Limit erreicht
+
+**Symptom:** Widgets/Ausspielung stocken oder fallen aus, besonders bei hoher Last (z. B. Spieltage, Großereignisse).
+
+**Ursache:** AWS-Autoscaling kann nicht mehr weiter hochskalieren, weil das konfigurierte Maximum erreicht ist.
+
+**Lösung:**
+1. AWS-Konsole → Comon Auto Scaling Group → Max-Anzahl Instanzen temporär erhöhen (aktueller Richtwert: 35)
+2. Philip/Armin benachrichtigen für dauerhafte Anpassung
+
+Referenz-Tickets: [#61818](https://redmine.endstand.de/issues/61818), [#61811](https://redmine.endstand.de/issues/61811)
+
+---
+
+## ran.de — CSS-Fix kommt verspätet an / Cache Breaker
+
+**Ursache:** ran.de setzt die CSS-Dateien selbst im eigenen Template. Es gibt keine Möglichkeit, eine dynamische URL von uns zu übernehmen. Der CSS-Cache liegt komplett bei ran.
+
+**Lösung:** Cache Breaker **zweimal** setzen. Einmalig reicht oft nicht.
+
+**Hinweis:** Änderungen an CSS-Ausnahmen (z. B. für Eishockey WM) müssen über ran kommuniziert werden, da wir keinen direkten Cache-Zugriff haben.
+
+Referenz-Ticket: [#61832](https://redmine.endstand.de/issues/61832)
+
+---
+
+## ZDF — Dark Mode Varianten (ESI-Endpoints)
+
+**Problem:** Dunkle Textfarbe auf dunklem Hintergrund in der ZDF-App.
+
+**Hintergrund:** Es gibt zwei verschiedene ESI-Endpoint-Varianten mit unterschiedlichem Standard-Theme:
+
+| Endpoint | Theme |
+|---|---|
+| `sportapi.zdf.de/esi/...` (zdfheute) | light/dark-Mode (wählbar) |
+| `sportapi.zdf.de/mediathek/esi/...` | Default: **dark** |
+
+**Lösung:** Für Mediathek-Einbindungen sicherstellen, dass der Dark-Mode-Kontext korrekt gesetzt ist.
+
+Referenz-Ticket: [#61824](https://redmine.endstand.de/issues/61824)
+
+---
+
+## Kicker Liveticker / Ringier (Sportal.ch) — Fehlende Season- oder Match-Mappings
+
+**Symptom:** Liveticker-Import schlägt fehl oder Ticker bleibt leer.
+
+**Ursache:** Neue Saison oder neues Spiel ist nicht in den Mapping-Tabellen eingetragen.
+
+**Lösung:**
+1. Saison in Admin anlegen (z. B. „Barrage Super League 2026", ID in DB notieren)
+2. Match-Mapping manuell anlegen
+3. `match_meta`-Eintrag für `tickertext_ringier=yes` prüfen/setzen
+
+Referenz-Ticket: [#61834](https://redmine.endstand.de/issues/61834), [#60911](https://redmine.endstand.de/issues/60911)
+
+---
+
+## Aufstellung — Torwart erscheint doppelt (auch als Torwart-Trainer)
+
+**Ursache:** Person ist sowohl als Spieler als auch als Torwart-Trainer in `rel_team_person` eingetragen.
+
+**Lösung:** `rel_team_person`-Eintrag für die Torwart-Trainer-Rolle entfernen (Rücksprache empfohlen, da Person ggf. wirklich beides ist).
+
+Referenz-Ticket: [#60069](https://redmine.endstand.de/issues/60069)
+
+---
+
+## Welt Print — Teamname zu lang (Abschneidung)
+
+**Ursache:** Welt Print hat ein Zeichenlimit für Team-Namen. Lange Namen werden abgeschnitten dargestellt.
+
+**Lösung:** Team-Kurzname in der DB anpassen (Beispiel: „Bournemouth" → „Bournem", „1860 München" → „1860 Münc").
+
+Wiederkehrender Fall: [#51850](https://redmine.endstand.de/issues/51850), [#59289](https://redmine.endstand.de/issues/59289), [#60911](https://redmine.endstand.de/issues/60911), [#60951](https://redmine.endstand.de/issues/60951)
+
+---
+
+## argcod / media_producer — k8s-Pod startet nicht
+
+**Symptom:** media_producer Pod hängt/startet nicht neu, Video-Clipping und verwandte Dienste nicht verfügbar.
+
+**Lösung:**
+1. Aktuelle verfügbare Version prüfen (Beispiel: 1.28.0 → 1.30.0)
+2. Version in k8s-Config aktualisieren → Pod neu deployen
+
+Referenz-Ticket: [#60898](https://redmine.endstand.de/issues/60898)
+
+---
+
+## AWS Elemental — Streams bleiben auf „idle" / starten nicht
+
+**Symptom:** Channel-Action bleibt auf „start", Status bleibt „idle", Jobs laufen, aber Streams starten nicht.
+
+**Ursache:** Ungültiges `//` in der `input_url` des Channels bzw. im `livestream_original`-Eintrag.
+
+**Lösung:** `input_url` und `livestream_original` auf doppelte Slashes prüfen und korrigieren.
+
+Referenz-Ticket: [#60040](https://redmine.endstand.de/issues/60040)
+
+---
+
+## Bild — Widget-Aktualisierung nach DOM ready schlägt fehl
+
+**Symptom:** Scores in Bild-Widgets (Web, Mobil, App) aktualisieren sich nicht zuverlässig.
+
+**Ursache:** Änderung in `update_machtes.js` hat die Aktualisierung nach dem `domready`-Event unterbunden.
+
+**Lösung:** `update_machtes.js` prüfen — Funktion nach `domready` muss korrekt registriert sein.
+
+Referenz-Ticket: [#60925](https://redmine.endstand.de/issues/60925)
+
+---
+
+## Bild — Video-Player Timeline verschoben
+
+**Ursache:** In `normalize.sass` setzt `div:not([class*='bmpui']) { position: relative }` das `position:absolute` der Timeline (und Embleme) außer Kraft.
+
+**Lösung:** Regel in `normalize.sass` enger fassen, sodass `bmpui`-Elemente ausgenommen bleiben. Quick-Win: Position im Bild-Projekt überschreiben.
+
+Referenz-Ticket: [#60911](https://redmine.endstand.de/issues/60911)
+
+---
+
+## ZDF Teletext — Tennis-Weltrangliste nicht aktuell
+
+**Ursache:** Der Import-Job lief montags/donnerstags um ~13 Uhr, Sportradar aktualisierte die Daten aber ebenfalls erst kurz nach 13 Uhr.
+
+**Lösung:** Import-Zeitplan auf „nach 13 Uhr" an Montagen und Donnerstagen angepasst.
+
+Referenz-Ticket: [#60960](https://redmine.endstand.de/issues/60960)
+
+---
+
+## Paralympics / Wintersport — Flaggen Belarus / Russland fehlen oder ausgegraut
+
+**Ursache:** Belarus/Russland sind in bestimmten Kontexten (Paralympics) ausgeblendet. Falls kein Athlet für Belarus eingetragen ist, erscheint Belarus auch nicht im Medaillenspiegel.
+
+**Lösung:** Heinze/Frontend prüfen Flaggen-Fix. Für den Medaillenspiegel: Atlheten-Daten für Belarus prüfen und ggf. nachtragen.
+
+Referenz-Ticket: [#60939](https://redmine.endstand.de/issues/60939)
+
+---
+
+## Endstand.de — Apache-Absturz durch Python-Crawler
+
+**Symptom:** Apache bricht wiederholt zusammen, Server kaum erreichbar.
+
+**Ursache:** Aggressiver Python-Bot (`python-requests/2.21.0`) mit hoher Request-Rate.
+
+**Lösung:**
+1. IP in `iptables` sperren (Notfall-Workaround)
+2. Apache neu starten
+3. Dauerhaft: Crawler-IP in WAF/Apache-Config blocken
+
+Referenz-Ticket: [#60102](https://redmine.endstand.de/issues/60102)
