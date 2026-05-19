@@ -1,0 +1,147 @@
+---
+title: "Formationen"
+description: "Referenz für taktische Formationen, Positionskürzel und Koordinatensystem"
+icon: "users"
+---
+
+## Positionskürzel
+
+| Kürzel | Position (DE) | position_id |
+|--------|--------------|-------------|
+| TW | Torwart | 1 |
+| LV | Linker Verteidiger | 3 |
+| IV | Innenverteidiger | 4 |
+| RV | Rechter Verteidiger | 5 |
+| LM | Linkes Mittelfeld | 6 |
+| DM | Defensives Mittelfeld | 7 |
+| OM | Offensives Mittelfeld | 8 |
+| RM | Rechtes Mittelfeld | 9 |
+| LA | Linker Außenstürmer | 10 |
+| MS | Mittelstürmer | 11 |
+| RA | Rechter Außenstürmer | 12 |
+| ZM | Zentrales Mittelfeld | 13 |
+
+## Koordinatensystem
+
+Positionen werden als relative Koordinaten auf einem Normalfeld angegeben:
+
+- **xpos** `0.0–1.0` — horizontal: `0.0` = linke Seite, `1.0` = rechte Seite, `0.5` = Mitte
+- **ypos** `0.0–1.0` — vertikal: `0.05` = Torlinie (TW), `0.9` = Angriffslinie (Stürmer)
+
+Blickrichtung ist immer aus Sicht der eigenen Mannschaft Richtung gegnerisches Tor.
+
+## Basis-Formationen (IDs 1–29)
+
+Jede Basis-Formation hat `name = fullname`. Sie definieren den Grundtyp ohne Variante.
+
+### Viererkette
+
+| formation_id | formation | Charakteristik |
+|-------------|-----------|----------------|
+| 1 | 4-4-1-1 | Kompaktes Mittelfeld-Block, hängende Spitze |
+| 2 | 4-2-3-1 | Klassische moderne Formation: Doppel-6, Zehner, Flügel |
+| 3 | 4-4-2 | Traditionell: zwei flache Viererketten |
+| 4 | 4-3-3 | Offensiv: drei Mittelfeldakteure, drei Angreifer |
+| 7 | 4-1-2-3 | Einzelner DM, Doppel-Zehner, drei Angreifer |
+| 8 | 4-1-4-1 | Einzelner DM, breites Vierermittelfeld |
+| 9 | 4-2-2-2 | Doppel-DM, zwei Zehner, zwei Stürmer |
+| 11 | 4-3-2-1 | Weihnachtsbaum: drei ZM, zwei Zehner, ein Stürmer |
+| 12 | 4-3-1-2 | Drei ZM, ein Zehner, zwei Stürmer |
+| 14 | 4-5-1 | Defensiv mit breitem Fünfermittelfeld |
+| 16 | 4-1-3-2 | Einzelner DM, Dreierreihe offensiv, zwei Stürmer |
+| 22 | 4-1-2-1-2 | Raute: DM – ZM/ZM – OM – zwei Stürmer |
+| 23 | 4-2-1-3 | Doppel-DM, ein Zehner, drei Angreifer |
+| 24 | 4-2-1-2-1 | Fünfreihig, sehr strukturiert |
+| 26 | 4-2-4 | Sehr offensiv: vier Angreifer |
+
+### Dreierkette
+
+| formation_id | formation | Charakteristik |
+|-------------|-----------|----------------|
+| 5 | 3-5-2 | Flügelläufer als Scharniere, drei ZM, zwei Stürmer |
+| 6 | 3-4-3 | Offensiv: drei IV, vier Mittelfeld, drei Angreifer |
+| 13 | 3-4-1-2 | Drei IV, vier Mittelfeld, Zehner, zwei Stürmer |
+| 18 | 3-2-3-2 | Aggressives Pressing: Doppel-DM, breites Mittelfeld |
+| 19 | 3-4-2-1 | Zwei Zehner hinter einem Stürmer |
+| 20 | 3-5-1-1 | Fünfermittelfeld, hängende Spitze |
+| 21 | 3-1-4-2 | Einzelner DM, Vierermittelfeld, zwei Stürmer |
+| 25 | 3-3-1-3 | Drei ZM, ein Zehner, drei Stürmer |
+| 28 | 3-3-3-1 | Drei Reihen à 3, ein Stürmer |
+| 32 | 3-3-2-2 | Drei IV, drei Mittelfeld, zwei ZM, zwei Stürmer |
+| 44 | 3-2-4-1 | Doppel-DM, breites Vierermittelfeld, ein Stürmer |
+
+### Fünferkette
+
+| formation_id | formation | Charakteristik |
+|-------------|-----------|----------------|
+| 10 | 5-3-2 | Defensiv: fünf Abwehrspieler, drei Mittelfeld |
+| 15 | 5-4-1 | Sehr defensiv: Riegel mit fünf hinten |
+| 17 | 5-2-3 | Fünf hinten, offensiv mit drei Angreifern |
+| 27 | 5-2-1-2 | Fünf + Doppel-DM + Zehner + zwei Stürmer |
+| 29 | 5-2-2-1 | Fünf + Doppel-DM + zwei Zehner + ein Stürmer |
+
+## Formationsvarianten (IDs 30–46)
+
+Varianten teilen denselben `formation`-Namen mit ihrer Basis, unterscheiden sich aber in `fullname` und in der konkreten Positionierung (xpos/ypos).
+
+| formation_id | formation | fullname | Variante |
+|-------------|-----------|----------|----------|
+| 30 | 4-3-3 | 4-3-3 with 6 | Ein DM + zwei ZM (statt 3×ZM) |
+| 31 | 3-4-1-2 | 3-4-1-2 defensive Midfielder | Zwei DM statt RM/LM im Mittelfeld |
+| 33 | 3-4-2-1 | 3-4-2-1 Double-10 | Zwei Zehner (OM) nebeneinander |
+| 34 | 3-4-2-1 | 3-4-2-1 defensive Midfielder | Zwei DM + RM/LM als Flügel offensiv |
+| 35 | 4-3-3 | 4-3-3 Double-6 | Zwei DM + ein Zehner |
+| 36 | 3-4-3 | 3-4-3 defensive Midfielder | RM/LM + zwei ZM (kein reiner Angriff) |
+| 37 | 4-4-2 | 4-4-2 Double-6 offensive Outliner | Doppel-DM, Flügel hoch positioniert |
+| 38 | 4-5-1 | 4-5-1 offensive Outliner | DM + zwei ZM + RM/LM weit vorne |
+| 39 | 4-1-4-1 | 4-1-4-1 offensive Midfielder | DM + RM/LM + zwei OM im Mittelfeld |
+| 40 | 4-4-2 | 4-4-2 Diamond | Rautenform: DM – ZM/ZM – OM – zwei Stürmer |
+| 41 | 4-4-1-1 | 4-4-1-1 offensive Outliner | Doppel-DM + RM/LM weit vorne + OM |
+| 42 | 3-3-2-2 | 3-3-2-2 Double-10 | Einzelner DM, RM/LM, zwei ZM hoch |
+| 43 | 4-4-2 | 4-4-2 Double-6 | Doppel-DM, RM/LM tiefer positioniert |
+| 45 | 4-1-4-1 | 4-1-4-1 central Double-10 | DM + RM/LM + zwei zentrale OM |
+| 46 | 3-5-2 | 3-5-2 attacking wingers | DM zentral, RA/LA sehr hoch |
+
+## Häufige Grundformationen
+
+<CardGroup cols={2}>
+  <Card title="4-2-3-1" icon="shield-halved">
+    Dominante Profi-Formation: solide Doppel-Sechs, ein Zehner, breite Flügel, ein Mittelstürmer. Gute Balance zwischen Defensive und Offensive.
+  </Card>
+  <Card title="4-3-3" icon="futbol">
+    Offensiv und breit: drei Mittelfeldakteure (oft 1 DM + 2 ZM), drei Angreifer. Bekannt durch FC Barcelona / Pep Guardiola.
+  </Card>
+  <Card title="4-4-2" icon="grid-2">
+    Klassische englische Formation: zwei Viererketten. Heute seltener im Spitzenfußball, aber kompakt und einfach zu verteidigen.
+  </Card>
+  <Card title="3-5-2" icon="arrow-up-wide-short">
+    Populäre Alternative: drei IV, zwei Flügelläufer als Scharniere (doppelte Funktion als RV/LV und RM/LM), drei zentrale Mittelfeldakteure.
+  </Card>
+</CardGroup>
+
+## Datenbankstruktur
+
+```sql
+-- Tabellen in db127096_17
+-- tactical_formation: Formationsdefinitionen
+-- tactical_position:  Spielerpositionen pro Formation
+-- position:           Positionstypen (Kürzel + Namen)
+
+SELECT
+    t.id            AS formation_id,
+    t.name          AS formation,
+    t.fullname,
+    tp.pos_index,
+    p.id            AS position_id,
+    p.shortname     AS position,
+    tp.xpos,
+    tp.ypos
+FROM db127096_17.tactical_position tp
+LEFT JOIN db127096_17.tactical_formation t ON tp.tactical_formation_id = t.id
+LEFT JOIN db127096_17.position p           ON p.id = tp.position_id
+WHERE t.sport_id = 1;
+```
+
+<Note>
+  Mehrere `formation_id`s können denselben `formation`-Namen haben (z.B. `4-3-3` als ID 4, 30 und 35). Der `fullname` unterscheidet diese Varianten und beschreibt die taktische Besonderheit, z.B. `"4-3-3 Double-6"` für zwei defensive Mittelfeldakteure.
+</Note>

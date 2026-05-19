@@ -1,0 +1,177 @@
+---
+title: "Formationen"
+description: "American Football Formations – Offense, Defense, Special Teams und Defensive Schemes"
+icon: "football"
+---
+
+## Übersicht
+
+American Football hat sechs Formations-Typen, aufgeteilt nach Spielphase:
+
+| formation_id | formation | fullname | Phase |
+|-------------|-----------|----------|-------|
+| 62 | Offense | Offense Depth Chart | Angriff |
+| 63 | Defense | Defense Depth Chart | Abwehr |
+| 64 | Special Teams | Defense Depth Chart | Sondereinsätze |
+| 68 | 4-4 Defense | 4-4 Defense Depth Chart | Defensivschema |
+| 71 | 4-3 Defense | 4-3 Defense Depth Chart | Defensivschema |
+| 74 | 3-4 Defense | 3-4 Defense Depth Chart | Defensivschema |
+
+## Positionskürzel
+
+### Offense
+| Kürzel | position_id | position_name |
+|--------|------------|---------------|
+| QB | 21 | Quarterback |
+| RB | 14 | Running Back |
+| FB | 84 | Fullback |
+| WR | 15 | Wide Receiver |
+| TE | 16 | Tight End |
+| LT | 102 | Left Tackle |
+| LG | 92 | Left Guard |
+| C | 73 | Center |
+| RG | 93 | Right Guard |
+| RT | 103 | Right Tackle |
+
+### Defense
+| Kürzel | position_id | position_name |
+|--------|------------|---------------|
+| DL | 18 | Defensive Lineman |
+| DE | 76 | Defensive End |
+| DT | 77 | Defensive Tackle |
+| NT | 78 | Nose Tackle |
+| LB | 24 | Linebacker |
+| OLB | 80 | Outside Linebacker |
+| ILB | 79 | Inside Linebacker |
+| MLB | 81 | Middle Linebacker |
+| CB | 20 | Cornerback |
+| LCB | 105 | Left Cornerback |
+| RCB | 104 | Right Cornerback |
+| NB | 106 | Nickel Back |
+| SS | 82 | Strong Safety |
+| FS | 83 | Free Safety |
+
+### Special Teams
+| Kürzel | position_id | position_name |
+|--------|------------|---------------|
+| PK | 23 | Place Kicker |
+| P | 19 | Punter |
+| H | 110 | Holder |
+| PR | 108 | Punt Returner |
+| KR | 107 | Kick Returner |
+| LS | 69 | Long Snapper |
+
+---
+
+## Offense (formation_id: 62)
+
+Standardaufstellung der Angriffseinheit mit 12 Positionen (inkl. O-Line).
+
+| pos_index | Kürzel | position_name |
+|-----------|--------|---------------|
+| 1 | QB | Quarterback |
+| 2 | RB | Running Back |
+| 3–5 | WR | Wide Receiver (3×) |
+| 6 | TE | Tight End |
+| 7 | FB | Fullback |
+| 8 | LT | Left Tackle |
+| 9 | LG | Left Guard |
+| 10 | C | Center |
+| 11 | RG | Right Guard |
+| 12 | RT | Right Tackle |
+
+## Defense (formation_id: 63)
+
+Standardaufstellung der Abwehreinheit mit 15 Positionen.
+
+| pos_index | Kürzel | position_name |
+|-----------|--------|---------------|
+| 1–2 | DE | Defensive End (2×) |
+| 3–4 | DT | Defensive Tackle (2×) |
+| 5 | NT | Nose Tackle |
+| 6, 10 | OLB | Outside Linebacker (2×) |
+| 7, 9 | ILB | Inside Linebacker (2×) |
+| 8 | MLB | Middle Linebacker |
+| 11 | LCB | Left Cornerback |
+| 12 | SS | Strong Safety |
+| 13 | FS | Free Safety |
+| 14 | CB | Cornerback |
+| 15 | NB | Nickel Back |
+
+## Special Teams (formation_id: 64)
+
+| pos_index | Kürzel | position_name |
+|-----------|--------|---------------|
+| 1 | PK | Place Kicker |
+| 2 | P | Punter |
+| 3 | H | Holder |
+| 4 | PR | Punt Returner |
+| 5 | KR | Kick Returner |
+| 6 | LS | Long Snapper |
+
+---
+
+## Defensive Schemes
+
+### 4-4 Defense (formation_id: 68)
+
+Vier Defensive Linemen + vier Linebacker, gut gegen den Laufangriff.
+
+| pos_index | Kürzel | Anzahl |
+|-----------|--------|--------|
+| 1–4 | DL | Defensive Lineman (4×) |
+| 5–8 | LB | Linebacker (4×) |
+| 9 | LCB | Left Cornerback |
+| 10 | SS | Strong Safety |
+| 11 | FS | Free Safety |
+| 12 | RCB | Right Cornerback |
+| 13 | NB | Nickel Back |
+
+### 4-3 Defense (formation_id: 71)
+
+Vier Defensive Linemen + drei Linebacker, verbreitetes Basisschema.
+
+| pos_index | Kürzel | Anzahl |
+|-----------|--------|--------|
+| 1–4 | DL | Defensive Lineman (4×) |
+| 5–7 | LB | Linebacker (3×) |
+| 8 | NB | Nickel Back |
+| 9 | SS | Strong Safety |
+| 10 | LCB | Left Cornerback |
+| 11 | FS | Free Safety |
+| 12 | RCB | Right Cornerback |
+
+### 3-4 Defense (formation_id: 74)
+
+Drei Defensive Linemen + vier Linebacker, flexibler gegen Pass und Lauf.
+
+| pos_index | Kürzel | Anzahl |
+|-----------|--------|--------|
+| 1–3 | DL | Defensive Lineman (3×) |
+| 4–7 | LB | Linebacker (4×) |
+| 8 | NB | Nickel Back |
+| 9 | SS | Strong Safety |
+| 10 | RCB | Right Cornerback |
+| 11 | LCB | Left Cornerback |
+| 12 | FS | Free Safety |
+
+<Note>
+  American Football Formations haben keine xpos/ypos-Koordinaten (alle `0.0`). Die Schemas (4-4, 4-3, 3-4) beschreiben die Anzahl der Defensivspieler pro Reihe (D-Line / Linebacker), nicht die exakten Feldpositionen.
+</Note>
+
+## DB-Abfrage
+
+```sql
+SELECT
+    t.id        AS formation_id,
+    t.name      AS formation,
+    t.fullname,
+    tp.pos_index,
+    p.id        AS position_id,
+    p.shortname AS position,
+    p.name      AS position_name
+FROM db127096_17.tactical_position tp
+LEFT JOIN db127096_17.tactical_formation t ON tp.tactical_formation_id = t.id
+LEFT JOIN db127096_17.position p           ON p.id = tp.position_id
+WHERE t.sport_id = 16;
+```

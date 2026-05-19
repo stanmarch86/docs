@@ -92,6 +92,41 @@
         ]
       },
       {
+        "tab": "Sport Wissen",
+        "groups": [
+          {
+            "group": "Fußball",
+            "pages": [
+              "wissen/formationen"
+            ]
+          },
+          {
+            "group": "Basketball",
+            "pages": [
+              "wissen/basketball-formationen"
+            ]
+          },
+          {
+            "group": "Baseball",
+            "pages": [
+              "wissen/baseball-formationen"
+            ]
+          },
+          {
+            "group": "Eishockey",
+            "pages": [
+              "wissen/eishockey-formationen"
+            ]
+          },
+          {
+            "group": "American Football",
+            "pages": [
+              "wissen/american-football-formationen"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "API reference",
         "groups": [
           {

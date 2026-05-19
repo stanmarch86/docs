@@ -1,0 +1,83 @@
+---
+title: "Formationen"
+description: "Eishockey Formations – Depth Chart, Power Play und Penalty Killing"
+icon: "hockey-puck"
+---
+
+## Übersicht
+
+Eishockey hat drei taktische Formationen, die Spielsituationen abbilden:
+
+| formation_id | formation | Beschreibung |
+|-------------|-----------|--------------|
+| 59 | Depth Chart | Normales 5-gegen-5-Spiel inkl. Goalie |
+| 60 | Power Play | Überzahl (5 Feldspieler, kein Goalie im Chart) |
+| 61 | Penalty Killing | Unterzahl (4 Feldspieler) |
+
+## Positionskürzel
+
+| Kürzel | position_id | position_name |
+|--------|------------|---------------|
+| G | 25 | Goalie |
+| C | 27 | Center |
+| LW | 28 | Linker Flügel |
+| RW | 29 | Rechter Flügel |
+| LD | 111 | Linker Verteidiger |
+| RD | 112 | Rechter Verteidiger |
+
+## Depth Chart (formation_id: 59)
+
+Reguläres Spiel mit allen sechs Positionen auf dem Eis.
+
+| pos_index | Kürzel | position_name |
+|-----------|--------|---------------|
+| 1 | C | Center |
+| 2 | LW | Linker Flügel |
+| 3 | RW | Rechter Flügel |
+| 4 | LD | Linker Verteidiger |
+| 5 | RD | Rechter Verteidiger |
+| 6 | G | Goalie |
+
+## Power Play (formation_id: 60)
+
+Überzahlspiel: 5 Feldspieler, der Goalie ist nicht im taktischen Chart erfasst.
+
+| pos_index | Kürzel | position_name |
+|-----------|--------|---------------|
+| 1 | C | Center |
+| 2 | LW | Linker Flügel |
+| 3 | RW | Rechter Flügel |
+| 4 | LD | Linker Verteidiger |
+| 5 | RD | Rechter Verteidiger |
+
+## Penalty Killing (formation_id: 61)
+
+Unterzahlspiel: 4 Feldspieler, typischerweise zwei Stürmer und zwei Verteidiger.
+
+| pos_index | Kürzel | position_name |
+|-----------|--------|---------------|
+| 1 | LW | Linker Flügel |
+| 2 | RW | Rechter Flügel |
+| 3 | LD | Linker Verteidiger |
+| 4 | RD | Rechter Verteidiger |
+
+<Note>
+  Eishockey-Formationen haben keine xpos/ypos-Koordinaten (alle `0.0`). Power Play und Penalty Killing haben keine eigene Feldpositionierung — sie definieren nur die eingesetzten Positionen.
+</Note>
+
+## DB-Abfrage
+
+```sql
+SELECT
+    t.id        AS formation_id,
+    t.name      AS formation,
+    t.fullname,
+    tp.pos_index,
+    p.id        AS position_id,
+    p.shortname AS position,
+    p.name      AS position_name
+FROM db127096_17.tactical_position tp
+LEFT JOIN db127096_17.tactical_formation t ON tp.tactical_formation_id = t.id
+LEFT JOIN db127096_17.position p           ON p.id = tp.position_id
+WHERE t.sport_id = 4;
+```

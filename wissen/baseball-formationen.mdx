@@ -1,0 +1,71 @@
+---
+title: "Formationen"
+description: "Baseball Depth Chart – Positionen und Rollen"
+icon: "baseball"
+---
+
+## Depth Chart (formation_id: 58)
+
+Baseball verwendet einen einzigen Depth Chart. Die zwölf Positionen decken Pitcher, Infield, Outfield und den Designated Hitter ab.
+
+| pos_index | position_id | Kürzel | position_name |
+|-----------|------------|--------|---------------|
+| 1 | 46 | SP | Starting Pitcher |
+| 2 | 47 | RP | Relief Pitcher |
+| 3 | 48 | CL | Closer |
+| 4 | 37 | C | Catcher |
+| 5 | 38 | 1B | 1st Base |
+| 6 | 39 | 2B | 2nd Base |
+| 7 | 40 | 3B | 3rd Base |
+| 8 | 41 | SS | Shortstop |
+| 9 | 43 | LF | Left Field |
+| 10 | 44 | CF | Center Field |
+| 11 | 42 | RF | Right Field |
+| 12 | 45 | DH | Designated Hitter |
+
+## Positionsbeschreibungen
+
+### Pitcher
+| Kürzel | Rolle |
+|--------|-------|
+| SP | Startwurf, wirft typisch 5–7 Innings |
+| RP | Ablösepitcher, übernimmt im Spielverlauf |
+| CL | Closer, sichert Führung im letzten Inning |
+
+### Infield
+| Kürzel | Rolle |
+|--------|-------|
+| C | Catcher, hinter dem Home Plate |
+| 1B | First Baseman |
+| 2B | Second Baseman |
+| 3B | Third Baseman |
+| SS | Shortstop, zwischen 2nd und 3rd Base |
+
+### Outfield & Designated
+| Kürzel | Rolle |
+|--------|-------|
+| LF | Left Fielder |
+| CF | Center Fielder, läuft die meisten Fläche ab |
+| RF | Right Fielder |
+| DH | Designated Hitter, schlägt statt Pitcher (kein Feld) |
+
+<Note>
+  Baseball-Formationen haben keine xpos/ypos-Koordinaten (alle `0.0`). Der Depth Chart bildet Positionshierarchie ab, nicht Feldpositionen.
+</Note>
+
+## DB-Abfrage
+
+```sql
+SELECT
+    t.id        AS formation_id,
+    t.name      AS formation,
+    t.fullname,
+    tp.pos_index,
+    p.id        AS position_id,
+    p.shortname AS position,
+    p.name      AS position_name
+FROM db127096_17.tactical_position tp
+LEFT JOIN db127096_17.tactical_formation t ON tp.tactical_formation_id = t.id
+LEFT JOIN db127096_17.position p           ON p.id = tp.position_id
+WHERE t.sport_id = 3;
+```

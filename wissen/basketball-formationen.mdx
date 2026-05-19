@@ -1,0 +1,48 @@
+---
+title: "Formationen"
+description: "Basketball Depth Chart – Positionen und Rollen"
+icon: "basketball"
+---
+
+## Depth Chart (formation_id: 57)
+
+Basketball verwendet einen einzigen Depth Chart ohne Feldkoordinaten. Die fünf Positionen definieren die Grundrollen auf dem Spielfeld.
+
+| pos_index | position_id | Kürzel | position_name |
+|-----------|------------|--------|---------------|
+| 1 | 65 | PG | Point Guard |
+| 2 | 66 | SG | Shooting Guard |
+| 3 | 68 | SF | Small Forward |
+| 4 | 67 | PF | Power Forward |
+| 5 | 64 | C | Center |
+
+## Positionsbeschreibungen
+
+| Kürzel | Rolle |
+|--------|-------|
+| PG | Spielmacher, organisiert den Angriff, führt den Ball |
+| SG | Zweitwächter, primärer Außen-Werfer |
+| SF | Vielseitiger Flügelspieler, zwischen Guard und Forward |
+| PF | Großer Forward, stark in Rebound und Post-Spiel |
+| C | Center, dominiert Korb-Bereich auf beiden Seiten |
+
+<Note>
+  Basketball-Formationen haben keine xpos/ypos-Koordinaten (alle `0.0`), da der Depth Chart nur die Positionshierarchie abbildet, nicht die Feldposition.
+</Note>
+
+## DB-Abfrage
+
+```sql
+SELECT
+    t.id        AS formation_id,
+    t.name      AS formation,
+    t.fullname,
+    tp.pos_index,
+    p.id        AS position_id,
+    p.shortname AS position,
+    p.name      AS position_name
+FROM db127096_17.tactical_position tp
+LEFT JOIN db127096_17.tactical_formation t ON tp.tactical_formation_id = t.id
+LEFT JOIN db127096_17.position p           ON p.id = tp.position_id
+WHERE t.sport_id = 2;
+```
