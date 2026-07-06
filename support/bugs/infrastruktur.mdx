@@ -1,0 +1,64 @@
+---
+title: "Infrastruktur & Jobs"
+description: "Bugs und Fixes bei AWS, Kubernetes, Import-Jobs und Server-Infrastruktur"
+icon: "server"
+---
+
+## Comon (AWS) — Max-Instanzen-Limit erreicht
+
+**Symptom:** Widgets/Ausspielung stocken oder fallen aus, besonders bei hoher Last (Spieltage, Großereignisse).
+
+**Ursache:** AWS-Autoscaling kann nicht mehr hochskalieren, weil das konfigurierte Maximum erreicht ist.
+
+**Lösung:**
+1. AWS-Konsole → Comon Auto Scaling Group → Max-Anzahl Instanzen temporär erhöhen (Richtwert: 35)
+2. Philip/Armin für dauerhafte Anpassung benachrichtigen
+
+Referenz-Tickets: [#61818](https://redmine.endstand.de/issues/61818), [#61811](https://redmine.endstand.de/issues/61811)
+
+---
+
+## argcod / media_producer — k8s-Pod startet nicht
+
+**Symptom:** media_producer Pod hängt/startet nicht neu, Video-Clipping nicht verfügbar.
+
+**Lösung:**
+1. Aktuelle verfügbare Version prüfen (Beispiel: 1.28.0 → 1.30.0)
+2. Version in k8s-Config aktualisieren → Pod neu deployen
+
+Referenz-Ticket: [#60898](https://redmine.endstand.de/issues/60898)
+
+---
+
+## AWS Elemental — Streams bleiben auf „idle" / starten nicht
+
+**Symptom:** Channel-Action bleibt auf „start", Status bleibt „idle".
+
+**Ursache:** Ungültiges `//` in der `input_url` des Channels bzw. im `livestream_original`-Eintrag.
+
+**Lösung:** `input_url` und `livestream_original` auf doppelte Slashes prüfen und korrigieren.
+
+Referenz-Ticket: [#60040](https://redmine.endstand.de/issues/60040)
+
+---
+
+## Job hängt — Voetball.nl
+
+In `job_queue` (Staticmon): hängenden Job mit `job_id=300` finden, `done=yes`, `running=no` setzen.
+
+In `customer_job`: `blocked_by_server`, `blocked_with_params` leeren, `running=0` setzen.
+
+---
+
+## Endstand.de — Apache-Absturz durch Python-Crawler
+
+**Symptom:** Apache bricht wiederholt zusammen, Server kaum erreichbar.
+
+**Ursache:** Aggressiver Python-Bot (`python-requests/2.21.0`) mit hoher Request-Rate.
+
+**Lösung:**
+1. IP in `iptables` sperren (Notfall-Workaround)
+2. Apache neu starten
+3. Dauerhaft: Crawler-IP in WAF/Apache-Config blocken
+
+Referenz-Ticket: [#60102](https://redmine.endstand.de/issues/60102)

@@ -1,0 +1,48 @@
+---
+title: "Print & Sonstiges"
+description: "Bugs und Fixes bei Print-Ausgaben (Welt, Bild, Axelspringer) sowie sonstige Einzelfälle"
+icon: "print"
+---
+
+## Axelspringer Print / BZ Print — Tabellen erneut anfordern
+
+1. SFTP zu `in.ergebnis-dienst.de`
+2. Pfad: `/srv/www/wf.sport1.de/srv/staticmon/generated/bz_print/nit`
+3. `*.NIT`-Datei löschen
+4. Empfänger benachrichtigen
+
+**Tabellen nach Re-Trigger nicht verfügbar:** Dateien per FTP löschen (Zugangsdaten: Dokument #102), Cron regeneriert automatisch.
+
+---
+
+## BILD Print
+
+**Self-Service-Admin:** http://admin.homecourt.de/admin_bild/  
+(Bereiche: Übertragung / Übertragung Zusatzligen / Übertragung BamS)
+
+| Problem | Lösung |
+|---|---|
+| Fehlende Teams | `team` + `rel_season_team` in GS DB prüfen; Daten-Re-Transfer triggern |
+| Fehlende Nachholspiele | Spiel auf heute verschieben, korrekten Spieltag setzen, Tabelle re-triggern |
+| Ticker-Textkorrektur | Tabelle `liveticker_i18n` (`id`, `locale_id=1`, `provider_id=7`, `tickertext`) |
+| Passwortanfragen | Klotmann oder Yildirim bei BILD kontaktieren |
+
+---
+
+## Welt Print — Teamname zu lang (Abschneidung)
+
+**Ursache:** Welt Print hat ein Zeichenlimit für Team-Namen. Lange Namen werden abgeschnitten.
+
+**Lösung:** Team-Kurzname in der DB anpassen (Beispiel: „Bournemouth" → „Bournem", „1860 München" → „1860 Münc").
+
+Wiederkehrender Fall: [#51850](https://redmine.endstand.de/issues/51850), [#59289](https://redmine.endstand.de/issues/59289), [#60951](https://redmine.endstand.de/issues/60951)
+
+---
+
+## Paralympics / Wintersport — Flaggen Belarus / Russland fehlen
+
+**Ursache:** Belarus/Russland sind in bestimmten Kontexten ausgeblendet. Falls kein Athlet für Belarus eingetragen ist, erscheint Belarus auch nicht im Medaillenspiegel.
+
+**Lösung:** Heinze/Frontend prüfen Flaggen-Fix. Für den Medaillenspiegel: Athleten-Daten für Belarus prüfen und nachtragen.
+
+Referenz-Ticket: [#60939](https://redmine.endstand.de/issues/60939)

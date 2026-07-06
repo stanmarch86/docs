@@ -1,0 +1,101 @@
+---
+title: "Widgets & UI"
+description: "Bugs und Fixes bei Widget-Darstellung, CSS, Dark Mode und Frontend-Problemen"
+icon: "display"
+---
+
+## WDR — Highlight Widget leer
+
+**Symptom:** WDR meldet leeres Highlight-Widget.
+
+**Diagnose:** Widget-Konfiguration und zugehörigen Feed prüfen — ob Highlights für das Spiel vorhanden und korrekt verknüpft sind.
+
+Referenz-Ticket: [#63058](https://redmine.endstand.de/issues/63058) — WM 2026, 11.06.2026
+
+---
+
+## ntv.de — WM-Aufstellung seltsam dargestellt
+
+**Symptom:** Aufstellungs-Widget zeigt ungewöhnliche Darstellung im Kontext der WM.
+
+**Diagnose:** Aufstellungs-Schema im Feed prüfen — insbesondere bei ungewöhnlichen Formationen oder neu angelegten Spielern.
+
+Referenz-Ticket: [#63092](https://redmine.endstand.de/issues/63092) — 11.06.2026
+
+---
+
+## ZDF — Dark Mode Varianten (ESI-Endpoints)
+
+**Problem:** Dunkle Textfarbe auf dunklem Hintergrund in der ZDF-App.
+
+**Hintergrund:** Es gibt zwei verschiedene ESI-Endpoint-Varianten:
+
+| Endpoint | Theme |
+|---|---|
+| `sportapi.zdf.de/esi/...` (zdfheute) | light/dark-Mode (wählbar) |
+| `sportapi.zdf.de/mediathek/esi/...` | Default: **dark** |
+
+**Lösung:** Für Mediathek-Einbindungen sicherstellen, dass der Dark-Mode-Kontext korrekt gesetzt ist.
+
+Referenz-Ticket: [#61824](https://redmine.endstand.de/issues/61824)
+
+---
+
+## ran.de — CSS-Fix kommt verspätet an / Cache Breaker
+
+**Ursache:** ran.de setzt CSS-Dateien selbst im eigenen Template. Kein direkter Cache-Zugriff von unserer Seite.
+
+**Lösung:** Cache Breaker **zweimal** setzen. Einmalig reicht oft nicht.
+
+**Hinweis:** Änderungen an CSS-Ausnahmen müssen über ran kommuniziert werden.
+
+Referenz-Ticket: [#61832](https://redmine.endstand.de/issues/61832)
+
+---
+
+## ran.de — TV-Coverage nicht angezeigt
+
+Kunden-Link wird als `match_meta`-Eintrag pro `match_id` gespeichert. XML-Ausgabe muss dieses Feld einschließen.
+
+---
+
+## Sport1 — Sport1.FM Streaming-URLs
+
+Streaming-URLs werden als `match_meta`-Einträge mit `provider_id=10` gespeichert.
+
+| Fall | Einträge |
+|---|---|
+| Einzelspiel | 2x „single-url" mit „...24_7..." URL |
+| Mehrere Spiele | 2x „single-url" + 2x „conference-url" |
+
+---
+
+## Bild — Widget-Aktualisierung nach DOM ready schlägt fehl
+
+**Symptom:** Scores in Bild-Widgets aktualisieren sich nicht zuverlässig.
+
+**Ursache:** Änderung in `update_machtes.js` hat die Aktualisierung nach dem `domready`-Event unterbunden.
+
+**Lösung:** `update_machtes.js` prüfen — Funktion nach `domready` muss korrekt registriert sein.
+
+Referenz-Ticket: [#60925](https://redmine.endstand.de/issues/60925)
+
+---
+
+## Bild — Video-Player Timeline verschoben
+
+**Ursache:** In `normalize.sass` setzt `div:not([class*='bmpui']) { position: relative }` das `position:absolute` der Timeline außer Kraft.
+
+**Lösung:** Regel in `normalize.sass` enger fassen. Quick-Win: Position im Bild-Projekt überschreiben.
+
+Referenz-Ticket: [#60911](https://redmine.endstand.de/issues/60911)
+
+---
+
+## Aufstellung — Torwart erscheint doppelt (auch als Torwart-Trainer)
+
+**Ursache:** Person ist sowohl als Spieler als auch als Torwart-Trainer in `rel_team_person` eingetragen.
+
+**Lösung:** `rel_team_person`-Eintrag für die Torwart-Trainer-Rolle entfernen (Rücksprache empfohlen).
+
+Referenz-Ticket: [#60069](https://redmine.endstand.de/issues/60069)

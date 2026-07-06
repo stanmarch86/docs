@@ -1,0 +1,85 @@
+---
+title: "BILD / WELT"
+description: "Themen: Datenfehler, WM-Tabellen, Quoten/Wettdaten, PUR-Nutzer. Axelspringer-Gruppe."
+icon: "bold"
+---
+
+## Integration & Kontext
+
+Axelspringer-Gruppe bei HEIM:SPIEL:
+- **bild.de** — Ergebnisse, WM-Tabellen, Widgets, Wettquoten
+- **welt.de / Welt Print** — Print-Tabellen, Ergebnisse
+- Separate Redmine-Projekte: `bild` und `bild-print-tabellen` / `welt-print`
+
+---
+
+## Häufige Probleme & Lösungen
+
+### Datenfehler (Ergebnisse, Torschützen, Tabellen)
+
+Häufigstes BILD-Thema während der WM. BILD hat hohe Traffic-Relevanz — Fehler werden schnell eskaliert.
+
+**Prüf-Reihenfolge:**
+1. Quell-Datenproblem (DSV/Sportec) oder eigenes System?
+2. Admin-Eintrag prüfen und ggf. korrigieren
+3. Schnelle Rückmeldung an BILD mit ETA
+
+→ Referenz: BILD hatte 2 simultane Tickets beim NED-MAR-Elfmeterschießen (30.06.2026)
+→ [Live-Daten Bugs — WM Elfmeterschießen](/support/bugs/live-daten#wm-elfmeterschiessen--doppelter-eintrag--falscher-status)
+
+### WM-Tabellen / Gruppenansicht
+
+BILD meldet falsche oder fehlende Tabellenansichten bei Großevents.
+
+**Prüfen:**
+- Season und Gruppe korrekt angelegt?
+- Tabellen-Berechnungs-Job gelaufen?
+- Gruppenphase vs. Gesamttabelle unterscheiden
+
+### Wettquoten / Quoten-Widget
+
+BILD integriert Wettquoten. Bei Problemen:
+- Quoten-Feed-Status prüfen
+- Anbieter-Konfiguration für bild.de aktiv?
+
+### PUR-Nutzer / Paywall-Probleme
+
+BILD hat ein PUR-Abo-Modell. Gelegentlich Probleme bei Widget-Anzeige für PUR-Nutzer vs. reguläre Nutzer.
+
+**Prüfen:**
+- Widget-Konfiguration unterscheidet PUR-Status?
+- Cookie/Session-basierte Probleme → schwer reproduzierbar
+
+---
+
+## Print-Integration (BILD / WELT)
+
+<Note>
+  Print-Tabellen laufen über Staticmon — separates System.
+</Note>
+
+→ Welt Print Cockpit: https://staticmon.vcc.heimspiel.de/special/show/welt-print/index.php
+- User: `welt` / Passwort: `print-pdf-cockpit` / Nummer: `##51850`
+
+→ Print-Bugs: [Print Bugs](/support/bugs/print) — Axelspringer Print, BILD Print, Welt Teamname
+
+---
+
+## Ticket-Muster (FIFA Frauen-WM 2026)
+
+| Kategorie | Häufigkeit | Typische Meldung |
+|---|---|---|
+| Datenfehler | hoch | „Ergebnis X falsch", NED-MAR Elfmeter |
+| WM-Tabellen | mittel | „Gruppe B zeigt falschen Stand" |
+| Quoten | niedrig | „Wettquoten nicht sichtbar" |
+| PUR-Nutzer | niedrig | „Widget für PUR-Nutzer kaputt" |
+
+---
+
+## Redmine-Projekte
+
+| Projekt | Kürzel | Kontext |
+|---|---|---|
+| BILD | `bild` | Hauptprojekt für bild.de |
+| BILD Print | `bild-print-tabellen` | Print-Tabellen |
+| Welt Print | `welt-print` | Print-Tabellen Welt |

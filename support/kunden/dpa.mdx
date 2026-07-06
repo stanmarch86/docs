@@ -1,0 +1,72 @@
+---
+title: "dpa.com"
+description: "Hauptthemen: Datenfehler, leere Meldungen, Tabellenplatzierungen, Übersetzungen."
+icon: "newspaper"
+---
+
+## Integration & Kontext
+
+dpa.com bezieht über HEIM:SPIEL:
+- **Live-Ticker-Meldungen** (Syndikation)
+- **Ergebnisse und Tabellendaten**
+- Inhalte werden von dpa weiterverteilt → Fehler haben Multiplikator-Effekt
+
+<Note>
+  dpa.com ≠ MSU / DPA Ergebnisdienst. Dieser Kunde ist die dpa-Redaktion (dpa.com), nicht der technische Ergebnisdienst der MSU. Für MSU/DPA-Ergebnisse → [MSU / DPA](/support/kunden/msu-dpa).
+</Note>
+
+---
+
+## Häufige Probleme & Lösungen
+
+### Leere Ticker-Meldungen
+
+**Symptom:** dpa.com erhält Ticker-Meldungen, aber Inhalt ist leer.
+
+**Diagnose:**
+1. Feed für das betroffene Spiel direkt aufrufen
+2. Prüfen ob Einträge vorhanden aber leer sind — oder komplett fehlen
+3. Syndikations-Job prüfen: läuft er, ist er blockiert?
+
+**Bisherige Erfahrung:** In allen bisherigen Fällen selbstheilend nach wenigen Minuten. Falls persistent (>15 min): Syndikations-Job prüfen und ggf. zurücksetzen.
+
+→ Referenz-Tickets: [#63283](https://redmine.endstand.de/issues/63283) — USA-Australien, [#63296](https://redmine.endstand.de/issues/63296)
+
+### Datenfehler (Ergebnisse, Torschützen, Tabellen)
+
+dpa.com meldet Datenfehler häufig mit Multiplikator-Druck — sie verteilen die Daten weiter, daher ist Korrekturtempo wichtig.
+
+**Prüf-Reihenfolge:**
+1. Gibt es ein Quell-Datenproblem (DSV, Sportec Solutions)?
+2. Ist der Fehler in unserem System oder upstream?
+3. Daten im Admin korrigieren und dpa.com umgehend informieren
+
+### Tabellenplatzierung falsch
+
+dpa.com meldet falsche Tabellenplatzierungen — häufig nach Spieltag-Ende.
+
+**Prüfen:**
+- Tabelle im Admin korrekt?
+- Berechnungs-Job gelaufen?
+- Bei WM: Gruppen-ID korrekt zugeordnet?
+
+### Übersetzungen fehlen / falsch
+
+dpa.com arbeitet mehrsprachig. Übersetzungen von Spielernamen, Mannschaftsnamen etc. fehlen oder sind falsch.
+
+**Prüfen:**
+- Übersetzungseinträge in der DB vorhanden?
+- Sprach-Mapping für dpa.com korrekt konfiguriert?
+
+---
+
+## Ticket-Muster (FIFA Frauen-WM 2026)
+
+| Kategorie | Häufigkeit | Typische Meldung |
+|---|---|---|
+| Datenfehler | hoch | „Ergebnis X falsch", „Torschütze Y gehört zu Team Z" |
+| Leere Meldungen | mittel | „Ticker-Meldungen für Spiel X leer" |
+| Tabellenplatzierung | mittel | „Tabelle zeigt falschen Stand" |
+| Übersetzungen | niedrig | „Name auf Englisch falsch" |
+
+**Wichtig:** dpa.com gehört zu den Kunden mit der höchsten Verbreitungswirkung. Datenfehler-Korrekturen immer mit Zeitstempel und kurzer Erklärung kommunizieren.

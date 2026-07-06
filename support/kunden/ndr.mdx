@@ -1,0 +1,38 @@
+---
+title: "NDR"
+description: "ARD-Gruppe. Hauptthema: Livecenter Netcast-Streams erscheinen zu spät — wiederkehrendes Timing-Problem."
+icon: "tower-broadcast"
+---
+
+## Integration & Kontext
+
+- **NDR Livecenter** — Echtzeit-Anzeige von Spielen, Streams, Tickers
+- **ndr.de/sport** — Ergebnisse und Spielberichte
+- Teil der **ARD-Gruppe** (→ Koordination oft mit WDR-Ansprechpartnern)
+
+---
+
+## Häufige Probleme & Lösungen
+
+### Netcast-Streams erscheinen zu spät im Livecenter
+
+**Symptom:** NDR meldet fehlende Audio-/Netcast-Streams im Livecenter, obwohl Streams bereits angelegt sind.
+
+**Ursache:** Die 12-Stunden-Sichtbarkeitslogik für Sportschau.de zieht sich auf NDR Livecenter durch. NDR erwartet sofortige Sichtbarkeit nach Anlage — wie bei ndr.de/sport, nicht wie bei Sportschau.de.
+
+**Workaround:**
+1. Stream-Einträge >12h vor Spielbeginn manuell eintragen
+2. NDR informieren sobald Streams sichtbar sind
+3. Sichtbarkeit vergleichen: `ndr.de/sport`-Ansicht vs. `sportschau.de`-Ansicht
+
+**Langfristig:** Sichtbarkeits-Timing für NDR-Livecenter von der 12h-Sportschau-Logik entkoppeln.
+
+→ [Live-Daten Bugs — NDR Livestreams](/support/bugs/live-daten#ndr-livecenter--netcast-streams-erscheinen-zu-sp%C3%A4t)
+
+Referenz-Tickets: [#63028](https://redmine.endstand.de/issues/63028), [#63446](https://redmine.endstand.de/issues/63446)
+
+---
+
+## Redmine-Projekt
+
+NDR-Tickets laufen im ARD-Projekt (`ard`). Bei ARD-übergreifenden Problemen auch [WDR](/support/kunden/wdr) und [MDR](/support/kunden/mdr) prüfen.

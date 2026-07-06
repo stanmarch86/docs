@@ -1,0 +1,79 @@
+---
+title: "ZDF"
+description: "Hauptthemen: Sprungmarken, TV-Sender-Logos, Teletext, Spielpläne."
+icon: "tv"
+---
+
+## Integration & Kontext
+
+ZDF nutzt HEIM:SPIEL-Widgets primär für:
+- **Spielpläne & Ergebnisse** (WM, Bundesliga, Champions League)
+- **Teletext-Integration** (automatischer Daten-Export)
+- **Liveticker-Darstellung** mit Sprungmarken-Navigation
+
+---
+
+## Häufige Probleme & Lösungen
+
+### Sprungmarken funktionieren nicht
+
+Das häufigste ZDF-Thema. Sprungmarken (Anchor-Links innerhalb des Widgets) springen nicht zum richtigen Abschnitt oder fehlen komplett.
+
+**Diagnose:**
+- Widget-Konfiguration prüfen: Sprungmarken-Parameter korrekt gesetzt?
+- Browser-Kompatibilität: Tritt das Problem in allen Browsern auf?
+- Hash-URL korrekt gebildet? (z. B. `#spieltag-3`)
+
+**Typische Ursache:** Konfigurationsänderung auf ZDF-Seite hat Parameter überschrieben.
+
+→ Siehe [Widgets & UI Bugs](/support/bugs/widgets-ui)
+
+### TV-Sender-Logos fehlen / falsch
+
+ZDF fragt regelmäßig nach TV-Sender-Logos (z. B. für WM-Übertragungsrechte-Anzeige).
+
+**Prüfen:**
+- Sender-Logo in der Datenbank vorhanden? (Admin → Sender)
+- Logo-Datei korrekt hochgeladen und verknüpft?
+- Richtiger Wettbewerb/Season verknüpft?
+
+### Teletext-Seiten — Daten nicht aktuell
+
+ZDF betreibt Teletext-Seiten mit automatischem Daten-Import.
+
+**Bekannte Eigenheit:** Import-Timing muss auf Datenverfügbarkeit abgestimmt sein.
+→ Referenz: [#60960](https://redmine.endstand.de/issues/60960) — Tennis-Weltrangliste: Import-Zeitplan angepasst (nach 13:00 Uhr an Montagen/Donnerstagen, weil Sportradar erst dann aktualisiert)
+
+**Fix-Muster:** Import-Zeitplan prüfen und ggf. auf „nach Daten-Update" verschieben.
+
+### Spielplan / WM-Gruppenphase
+
+ZDF meldet fehlende oder falsche Spielplandaten bei Großevents.
+
+**Prüfen:**
+- Season und Runden korrekt angelegt?
+- Spiele dem richtigen Wettbewerb zugeordnet?
+- Für WM: Gruppenphase vs. K.o.-Phase — separate Konfiguration?
+
+### Dark Mode Darstellung
+
+ZDF hat spezifische Dark-Mode-Anforderungen für Widget-Darstellung.
+
+→ Siehe [Widgets & UI Bugs — ZDF Dark Mode](/support/bugs/widgets-ui)
+
+---
+
+## Ticket-Muster (FIFA Frauen-WM 2026)
+
+| Kategorie | Typische Meldung |
+|---|---|
+| Sprungmarken | „Sprungmarke zu Gruppe X funktioniert nicht" |
+| TV-Sender | „Logo für ARD/ZDF bei Spielen fehlt" |
+| Teletext | „Daten auf Teletext-Seite XX veraltet" |
+| Spielplan | „WM-Spielplan zeigt falsche Gruppe" |
+
+---
+
+## Redmine-Projekt
+
+Kürzel: `zdf` — Tickets direkt im ZDF-Projekt suchen.

@@ -1,0 +1,41 @@
+---
+title: "MDR"
+description: "ARD-Gruppe. Sophora-Integration — DSV-ID-Matching schlägt wiederholt bei hochkarätigen Spielen fehl."
+icon: "tower-broadcast"
+---
+
+## Integration & Kontext
+
+MDR nutzt eine **Sophora-Integration** für automatische Spieldaten-Anzeige. Sophora bezieht Spieldaten über DSV-IDs.
+
+Wenn DSV-IDs fehlen, schickt Sophora automatische Fehlermeldungen an mehrere Empfänger — MDR-Meldungen kommen daher oft gebündelt mit cc-Verteiler.
+
+---
+
+## Häufige Probleme & Lösungen
+
+### DSV-ID fehlt kurz vor Spielbeginn
+
+**Symptom:** MDR/Sophora meldet fehlende DSV-ID für ein konkretes Spiel. Meldung kommt typischerweise 1–12 Stunden vor Spielbeginn.
+
+**Ursache:** Das automatische Matching zwischen DSV-IDs und Sophora-Spielen greift bei hochkarätigen Einzelspielen (Finals, Nationalmannschaft) zu spät oder deckt diese Spieltypen nicht vollständig ab.
+
+**Fix:**
+1. Betroffenes Spiel aus dem Betreff identifizieren
+2. DSV-ID in der Spielkonfiguration prüfen — vorhanden?
+3. DSV-ID manuell eintragen falls fehlend
+4. MDR informieren wann der nächste Job-Durchlauf stattfindet → Fehlermeldung verschwindet automatisch
+
+Kein manueller Eingriff bei Sophora notwendig.
+
+**Präventiv:** 24h vor hochkarätigen Spielen (Nationalmannschaft, Finals) prüfen ob DSV-IDs für alle Spiele des Tages vorhanden sind.
+
+→ [Live-Daten Bugs — MDR / Sophora](/support/bugs/live-daten#mdr--sophora--dsv-id-fehlt-kurz-vor-spielbeginn)
+
+Referenz-Tickets: [#63116](https://redmine.endstand.de/issues/63116), [#63445](https://redmine.endstand.de/issues/63445)
+
+---
+
+## Redmine-Projekt
+
+MDR-Tickets laufen im ARD-Projekt (`ard`). Bei ARD-übergreifenden Problemen auch [WDR](/support/kunden/wdr) und [NDR](/support/kunden/ndr) prüfen.

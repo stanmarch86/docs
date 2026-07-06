@@ -1,0 +1,155 @@
+---
+title: "Live-Daten, Ticker & Feeds"
+description: "Bugs und Fixes rund um Liveticker, Ergebnisfeeds, DSV-IDs und Echtzeit-Datenprobleme"
+icon: "bolt"
+---
+
+## WM Elfmeterschießen — Doppelter Eintrag / falscher Status
+
+**Symptom:** Mehrere Kunden melden gleichzeitig falsches Endergebnis oder falsche Elfmeter-Markierung (verschossen statt getroffen oder umgekehrt).
+
+**Ursache:** Im Ticker-Tool wurde ein Elfmeter-Event doppelt eingetragen oder der Getroffen/Verschossen-Status fehlerhaft gesetzt. Eine automatische Konsistenzprüfung fehlt.
+
+**Lösung:**
+1. Tickermaske öffnen → betroffenes Spiel suchen
+2. Elfmeter-Events unter „Aktionen" prüfen — Doppeleinträge identifizieren
+3. Falschen Eintrag löschen oder Status (getroffen/verschossen) korrigieren
+4. Falls Eintrag nicht sichtbar (nur im Tickertext): Tor neu eintragen (nicht ideal, aber funktioniert)
+5. Endergebnis in den Grunddaten manuell korrigieren
+
+**Wichtig:** Korrektur des Tickertexts via `syndicate=sportschau` erfordert entsprechende Berechtigung — ggf. Armin einbeziehen.
+
+Referenz-Tickets: [#63465](https://redmine.endstand.de/issues/63465), [#63464](https://redmine.endstand.de/issues/63464), [#63463](https://redmine.endstand.de/issues/63463), [#63462](https://redmine.endstand.de/issues/63462) — NED-MAR, 30.06.2026
+
+---
+
+## ntv.de XML-Feed — Wiederholt leer oder Match-Filter defekt
+
+**Symptom:** ntv.de meldet leeren XML-Feed, fehlende Spiele (insbesondere 0-Uhr-Spiele) oder defekten Match-Filter.
+
+**Bekannte Varianten:**
+- Feed komplett leer → keine Response
+- 0-Uhr-Spiele fehlen im Feed (Datum-Grenzproblem)
+- Match-Filter (`?match=...`) liefert leere Antwort trotz vorhandener Daten
+
+**Diagnose:**
+1. Feed-URL direkt aufrufen und Response prüfen
+2. Für 0-Uhr-Spiele: Datum-Offset prüfen (UTC vs. CET Mitternacht)
+3. Match-Filter: Feed ohne Filter aufrufen und prüfen ob Spiel generell vorhanden ist
+
+**Fix:**
+- Spiel manuell in den Feed-Konfig aufnehmen
+- Datum-Logik für 0-Uhr-Spiele prüfen (Ticket-Kontext: Feed-Job läuft um Mitternacht UTC)
+- Bei persistentem Match-Filter-Problem: Philip/Backend einbeziehen
+
+Referenz-Tickets: [#63175](https://redmine.endstand.de/issues/63175), [#63225](https://redmine.endstand.de/issues/63225), [#63252](https://redmine.endstand.de/issues/63252), [#63397](https://redmine.endstand.de/issues/63397)
+
+---
+
+## MDR / Sophora — DSV-ID fehlt kurz vor Spielbeginn
+
+**Symptom:** MDR meldet fehlende DSV-ID für ein hochkarätiges Spiel (häufig Deutschland-Spiele). Sophora schickt automatische Fehlermeldung an mehrere Empfänger.
+
+**Ursache:** Das automatische Matching zwischen DSV-IDs und Sophora-Spielen schlägt fehl oder läuft zu spät.
+
+**Fix:**
+- DSV-ID manuell in der Spielkonfiguration nachtragen (wird i.d.R. schon vor der Kundenmeldung behoben)
+- MDR informieren, wann der nächste Job-Durchlauf stattfindet — dann verschwindet die Fehlermeldung automatisch
+
+**Präventiv:** 24h-Vorprüfung einführen: Sind für alle heutigen Spiele DSV-IDs vorhanden?
+
+Referenz-Tickets: [#63116](https://redmine.endstand.de/issues/63116) — BBL-Finale 12.06., [#63445](https://redmine.endstand.de/issues/63445) — Deutschland WM 29.06.2026
+
+---
+
+## NDR Livecenter — Netcast-Streams erscheinen zu spät
+
+**Symptom:** NDR meldet fehlende Audio-Netcast-Streams im Livecenter, obwohl Streams bereits angelegt sind.
+
+**Ursache:** Streams werden erst ab 12 Stunden vor Spielbeginn als Symbol bei Sportschau.de angezeigt. Diese Zeitlogik gilt nicht für ndr.de/sport — dort sollten Streams sofort nach Anlage sichtbar sein.
+
+**Fix:**
+- Stream-Einträge auf korrekten Status prüfen
+- Sichtbarkeits-Timing für NDR-Livecenter vs. Sportschau-Ergebnisbereich unterscheiden
+- Bis zur sauberen Feed-Lösung: Streams für NDR-Livecenter manuell früher eintragen
+
+**Hinweis:** Problem ist wiederkehrend (Vorrunde und K.o.-Phase WM 2026). NDR-Wunsch: Streams sofort nach Anlage sichtbar, wie in der Vorrunde.
+
+Referenz-Tickets: [#63028](https://redmine.endstand.de/issues/63028) — 09.06., [#63446](https://redmine.endstand.de/issues/63446) — 29.06.2026
+
+---
+
+## dpa.com — Leere Meldungen im Live-Ticker
+
+**Symptom:** dpa.com erhält leere Ticker-Meldungen für laufende Spiele.
+
+**Ursache:** Kurze Ausfälle im Meldungs-Syndikationsprozess. Meist selbstheilend nach wenigen Minuten.
+
+**Diagnose:**
+1. Feed für das betroffene Spiel direkt aufrufen
+2. Prüfen ob Ticker-Einträge vorhanden aber leer sind, oder komplett fehlen
+
+**Fix:** In den bisherigen Fällen hat sich das Problem nach kurzer Zeit selbst behoben. Falls persistent: Syndikations-Job prüfen.
+
+Referenz-Tickets: [#63283](https://redmine.endstand.de/issues/63283) — USA-Australien, [#63296](https://redmine.endstand.de/issues/63296)
+
+---
+
+## APA Liveticker — Tickermaske hängt
+
+**Ursache:** Illegale Zeichen (z. B. doppelte Anführungszeichen) im Feed.
+
+**Lösung:**
+1. JSON aufrufen → Debug-Modus XML aktivieren
+2. Ungültige Position im Feed finden
+3. Zeichen in der DB-Tabelle `liveticker` (DB_17) entfernen oder escapen
+
+Referenz-Ticket: [#6102](https://redmine.endstand.de/issues/6102)
+
+---
+
+## European League of Football (ELF) — Ergebnisse laufen nicht ein
+
+**Prüfen:** https://europeanleague.football/schedule auf „Waiting for Datafeed..." checken.
+
+Alternativ via FTP prüfen ob Quell-XML vorhanden (Referenz: [#39012](https://redmine.endstand.de/issues/39012)).
+
+Falls Daten vorhanden aber nicht verarbeitet:
+- Job 622 (Download) oder Job 623 (Verarbeitung) hängt → zurücksetzen
+
+---
+
+## Kicker Liveticker / Ringier — Fehlende Season- oder Match-Mappings
+
+**Symptom:** Liveticker-Import schlägt fehl oder Ticker bleibt leer.
+
+**Ursache:** Neue Saison oder neues Spiel ist nicht in den Mapping-Tabellen eingetragen.
+
+**Lösung:**
+1. Saison in Admin anlegen
+2. Match-Mapping manuell anlegen
+3. `match_meta`-Eintrag für `tickertext_ringier=yes` prüfen/setzen
+
+→ Detailliertes Runbook: [Liveticker läuft nicht ein](/support/runbooks/liveticker-einlauf)
+
+Referenz-Tickets: [#61834](https://redmine.endstand.de/issues/61834), [#60911](https://redmine.endstand.de/issues/60911)
+
+---
+
+## ZDF Teletext — Tennis-Weltrangliste nicht aktuell
+
+**Ursache:** Import-Job lief montags/donnerstags um ~13 Uhr, Sportradar aktualisierte die Daten aber erst kurz nach 13 Uhr.
+
+**Lösung:** Import-Zeitplan auf „nach 13 Uhr" an Montagen und Donnerstagen angepasst.
+
+Referenz-Ticket: [#60960](https://redmine.endstand.de/issues/60960)
+
+---
+
+## Homecourt-Admin (außer Fußball) — Falscher Spielstand
+
+**Fix in `X_Ergebnisse`** (1er-DB / oneman): `tore`-Spalte aktualisieren.
+
+`wo`-Werte: `1` = Heim, `2` = Auswärts, `3` = none_home, `4` = none_away
+
+GS-Anpassung nötig: GS-Admin nutzen. Sonderfall: `gespielt=0` + `finished=no` in `X_Spiele` / Match setzen.

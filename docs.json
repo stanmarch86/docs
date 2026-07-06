@@ -23,6 +23,13 @@
           {
             "group": "Kunden",
             "pages": [
+              "support/kunden/wdr",
+              "support/kunden/dpa",
+              "support/kunden/zdf",
+              "support/kunden/ntv",
+              "support/kunden/ndr",
+              "support/kunden/mdr",
+              "support/kunden/bild",
               "support/kunden/ringier",
               "support/kunden/msu-dpa"
             ]
@@ -37,7 +44,10 @@
           {
             "group": "Bugs & Lösungen",
             "pages": [
-              "support/bugs",
+              "support/bugs/live-daten",
+              "support/bugs/widgets-ui",
+              "support/bugs/infrastruktur",
+              "support/bugs/print",
               "support/staticmon"
             ]
           },

@@ -1,43 +1,69 @@
 ---
-title: "Support Übersicht"
-description: "Projektübersicht, Monitoring-Links und externe Kontakte"
+title: "Support Triage"
+description: "Eingehende Kundenmeldung? Hier starten. Kunde → Symptom → Lösung."
 icon: "headset"
 ---
 
-<Warning>
-  Bevor mit Redmine gearbeitet wird, unbedingt die entsprechenden Redmine-Wiki-Seiten lesen!
-</Warning>
+<Info>
+  **Workflow bei eingehender Mail:** Kunden-Seite aufrufen → bekannte Problemmuster prüfen → passendes Runbook öffnen. Mintlify-Suche (Cmd+K / Ctrl+K) findet auch Ticket-IDs und Fehlerbeschreibungen.
+</Info>
 
-## Projekte
+## Kunden-Schnellzugriff
 
-| Projekt | Kürzel |
+<CardGroup cols={4}>
+  <Card title="WDR" icon="radio" href="/support/kunden/wdr">
+    fm.wdr.de · wdr.de · Sportschau
+  </Card>
+  <Card title="dpa.com" icon="newspaper" href="/support/kunden/dpa">
+    Datenfehler · Ticker-Meldungen
+  </Card>
+  <Card title="ZDF" icon="tv" href="/support/kunden/zdf">
+    Sprungmarken · Teletext · TV-Logos
+  </Card>
+  <Card title="ntv.de" icon="satellite-dish" href="/support/kunden/ntv">
+    XML-Feed · Aufstellung · WM-Daten
+  </Card>
+  <Card title="NDR" icon="tower-broadcast" href="/support/kunden/ndr">
+    Livecenter · Netcast-Streams
+  </Card>
+  <Card title="MDR" icon="tower-broadcast" href="/support/kunden/mdr">
+    Sophora · DSV-ID-Mapping
+  </Card>
+  <Card title="BILD" icon="bold" href="/support/kunden/bild">
+    Datenfehler · WM-Tabellen · PUR
+  </Card>
+  <Card title="Ringier" icon="newspaper" href="/support/kunden/ringier">
+    Kicker-API · sport.ch · kicker.ch
+  </Card>
+  <Card title="MSU / DPA" icon="signal" href="/support/kunden/msu-dpa">
+    Ergebnisdienst · GFL · American Football
+  </Card>
+</CardGroup>
+
+---
+
+## Symptom-Matrix
+
+Wenn der Kunde über **dieses Problem** schreibt → direkt zu dieser Seite:
+
+| Symptom (was der Kunde schreibt) | Wo nachschauen |
 |---|---|
-| Neuer Admin (AAA) | neuer-admin |
-| Ad-System | ad-system |
-| ARD | ard |
-| Amazon | amazon |
-| App-Framework | app-framework |
-| AWS / Elasticsearch | aws |
-| Betmon | betmon |
-| BILD | bild |
-| BILD Print-Tabellen | bild-print-tabellen |
-| DSV | dsv |
-| E2 | e2 |
-| Freenet | freenet |
-| Plusserver | Plusserver |
-| Soccerlab | soccerlab |
-| Sport1 | sport1 |
-| Staticmon | staticmon |
-| Spiegel | spiegel |
-| Sportal.ch | sportal.ch |
-| SportDB | SportDB |
-| Sportec Solutions | Sportec Solutions |
-| Stats Perform | Stats Perform |
-| Teleclub (Swisscom) | Teleclub |
-| Triax | Triax |
-| Video Clipping | Video Clipping |
-| Welt Print | Welt Print |
-| ZDF | zdf |
+| „Ergebnis falsch" / „falscher Torschütze" / „falsches Endergebnis" | [Datenfehler-Bugs](/support/bugs/live-daten) · Kunden-Seite |
+| „Ticker läuft nicht ein" / „keine Liveticker-Einträge" | [Runbook: Liveticker läuft nicht ein](/support/runbooks/liveticker-einlauf) |
+| „Ergebnis fehlt" / „Endstand kommt nicht an" | [Runbook: Fehlende Ergebnisse](/support/runbooks/fehlende-ergebnisse) |
+| „Feed leer" / „XML-Feed ohne Daten" | [ntv.de-Profil](/support/kunden/ntv) · [Live-Daten Bugs](/support/bugs/live-daten) |
+| „DSV-ID fehlt" / Sophora-Fehlermeldung | [MDR-Profil](/support/kunden/mdr) · [Live-Daten Bugs](/support/bugs/live-daten) |
+| „Stream fehlt im Livecenter" / „Netcast nicht sichtbar" | [NDR-Profil](/support/kunden/ndr) · [Live-Daten Bugs](/support/bugs/live-daten) |
+| „Widget leer" / „Highlight-Widget zeigt nichts" | [Widgets & UI Bugs](/support/bugs/widgets-ui) |
+| „Darstellung falsch" / „Layout kaputt" / „Logo fehlt" | [Widgets & UI Bugs](/support/bugs/widgets-ui) |
+| „Aufstellung fehlt" / „Kader nicht aktuell" | [Live-Daten Bugs](/support/bugs/live-daten) · Kunden-Seite |
+| „Sprungmarke funktioniert nicht" / „Navigation fehlt" | [ZDF-Profil](/support/kunden/zdf) · [Widgets & UI Bugs](/support/bugs/widgets-ui) |
+| „Leere Meldungen" / „Ticker-Text leer" | [dpa.com-Profil](/support/kunden/dpa) · [Live-Daten Bugs](/support/bugs/live-daten) |
+| „Print-Tabelle fehlt" / „PDF-Export kaputt" | [Print Bugs](/support/bugs/print) |
+| Infrastruktur / Server / Job hängt | [Infrastruktur Bugs](/support/bugs/infrastruktur) |
+| Elfmeterschießen-Fehler / KO-Spiel-Daten falsch | [Live-Daten Bugs](/support/bugs/live-daten#wm-elfmeterschiessen--doppelter-eintrag--falscher-status) |
+
+---
 
 ## Monitoring
 
@@ -56,23 +82,27 @@ icon: "headset"
   </Card>
 </CardGroup>
 
-## Externe Kontakte
+---
 
-### Stats Perform
+## Externe Datenliefer­anten & Kontakte
 
-- help@support.statsperform.com
-- optasupportdesk@statsperform.com
-- support@statsperform.com
+| Kontakt | E-Mail | Kontext |
+|---|---|---|
+| Stats Perform Help | help@support.statsperform.com | Allgemeiner Support |
+| Stats Perform Opta | optasupportdesk@statsperform.com | Opta-Daten |
+| Sportec Solutions intern | sportec-solutions@heimspiel.de | Meldungen intern |
+| Sportec Solutions direkt | mpc@sportec-solutions.com | Direkter Support |
 
-### Sportec Solutions
+---
 
-- **Meldungen intern:** sportec-solutions@heimspiel.de
-- **Direkter Support:** mpc@sportec-solutions.com
+## Redmine-Projekte (Referenz)
 
-## Welt Print Cockpit
-
-URL: https://staticmon.vcc.heimspiel.de/special/show/welt-print/index.php
-
-- User: `welt`
-- Passwort: `print-pdf-cockpit`
-- Nummer: `##51850`
+| Projekt | Kürzel | Projekt | Kürzel |
+|---|---|---|---|
+| ARD | ard | BILD | bild |
+| ZDF | zdf | Sport1 | sport1 |
+| DSV | dsv | Spiegel | spiegel |
+| AWS / Elasticsearch | aws | Freenet | freenet |
+| Neuer Admin (AAA) | neuer-admin | Staticmon | staticmon |
+| Betmon | betmon | SportDB | SportDB |
+| BILD Print | bild-print-tabellen | Welt Print | welt-print |

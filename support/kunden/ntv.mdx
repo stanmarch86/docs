@@ -1,0 +1,53 @@
+---
+title: "ntv.de"
+description: "XML-Feed-Integration für Ergebnisse und Spielplandaten. Häufige Meldung: Feed leer oder Match-Filter defekt."
+icon: "satellite-dish"
+---
+
+## Integration & Kontext
+
+ntv.de bezieht über HEIM:SPIEL:
+- **XML-Feeds** für Ergebnisse und Spielplandaten
+- **Widget-Integration** für Aufstellungen
+- **Liveticker-Daten** via direktem Feed
+
+Bei ntv.de-Meldungen immer zuerst den Feed direkt aufrufen — XML-Feed-Probleme treten in verschiedenen Varianten auf, haben aber eine gemeinsame Diagnose-Logik.
+
+---
+
+## Häufige Probleme & Lösungen
+
+### XML-Feed leer oder ohne Daten
+
+**Erste Aktion:** Feed-URL direkt aufrufen und Response prüfen.
+
+| Symptom | Ursache | Fix |
+|---|---|---|
+| Feed komplett leer | Job nicht gelaufen / Policy fehlt | Job-Status prüfen, Policy kontrollieren |
+| 0-Uhr-Spiele fehlen | Datums-Offset UTC vs. CET | Feed-Job läuft Mitternacht UTC → CET-Spiele fallen raus |
+| Match-Filter defekt (`?match=...`) | Filter-Logik kaputt | Feed ohne Filter testen → Backend |
+| Statistik ohne Daten | Spiel nicht in Statistik-Konfiguration | Statistik-Verknüpfung prüfen |
+
+**Diagnose-Reihenfolge:**
+1. Feed-URL ohne Filter aufrufen → Spiel generell vorhanden?
+2. Mit Match-Filter → Filter funktioniert?
+3. 0-Uhr-Spiele: Datum-Offset UTC vs. CET prüfen
+4. Persistent → Backend einbeziehen
+
+→ [Live-Daten Bugs — ntv.de XML-Feed](/support/bugs/live-daten#ntvde-xml-feed--wiederholt-leer-oder-match-filter-defekt)
+
+Referenz-Tickets: [#63175](https://redmine.endstand.de/issues/63175), [#63225](https://redmine.endstand.de/issues/63225), [#63252](https://redmine.endstand.de/issues/63252), [#63397](https://redmine.endstand.de/issues/63397)
+
+### Elfmeterschießen / KO-Spiel-Daten falsch
+
+Falsche Endergebnisse oder fehlerhafte Elfmeter-Darstellung bei KO-Spielen.
+
+→ [Live-Daten Bugs — Elfmeterschießen](/support/bugs/live-daten#wm-elfmeterschiessen--doppelter-eintrag--falscher-status)
+
+Referenz-Tickets: [#63463](https://redmine.endstand.de/issues/63463), [#63462](https://redmine.endstand.de/issues/63462)
+
+### Aufstellung fehlt / Kader nicht sichtbar
+
+DSV-Import prüfen, Aufstellung im AAA-Backend kontrollieren.
+
+→ [Live-Daten Bugs](/support/bugs/live-daten)

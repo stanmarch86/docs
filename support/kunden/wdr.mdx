@@ -1,0 +1,60 @@
+---
+title: "WDR / Sportschau"
+description: "ARD-Gruppe: fm.wdr.de, wdr.de, sportschau.de. Häufigste Themen: Ticker-Fehler, Aufstellungen, Livestreams, Overlays."
+icon: "radio"
+---
+
+## Domains & Integration
+
+| Domain | Kontext |
+|---|---|
+| wdr.de | Hauptdomain — Ergebnisse, Aufstellungen, Widgets |
+| fm.wdr.de | Radiobereich — Liveticker, Overlays |
+| sportschau.de | ARD-Sportschau — Streams, Liveticker-Texte |
+
+WDR ist Teil der **ARD-Gruppe** (WDR + NDR + MDR + BR + RBB). Bei ARD-übergreifenden Problemen auch [NDR](/support/kunden/ndr) und [MDR](/support/kunden/mdr) prüfen.
+
+---
+
+## Häufige Probleme & Lösungen
+
+### Ticker-Fehler / falscher Spielstand
+
+1. Spiel im Ticker-Tool korrekt angelegt?
+2. Doppelte Events vorhanden? (Elfmeter, Tore)
+3. Syndicate `sportschau` — Berechtigung für Korrektur ggf. über Armin
+
+→ [Live-Daten Bugs](/support/bugs/live-daten)
+
+### Audio Livestreams / HLS erscheinen nicht
+
+Sportschau Audio-Streams werden mit 12h-Vorlauf-Logik angezeigt — gleiche Ursache wie beim NDR-Livecenter-Problem.
+
+1. Stream-Eintrag Status prüfen
+2. Sichtbarkeits-Timing: 12h vor Spielbeginn oder sofort?
+
+→ Verwandt: [NDR Livecenter](/support/kunden/ndr#netcast-streams-erscheinen-zu-sp%C3%A4t-im-livecenter)
+
+### Aufstellungen fehlen / Kader nicht aktuell
+
+- Aufstellung im AAA-Backend angelegt?
+- DSV-Import für das Spiel gelaufen?
+- Bei Großevents: ID-Matching rechtzeitig vor Spielbeginn prüfen
+
+→ [Live-Daten Bugs — DSV-ID](/support/bugs/live-daten#mdr--sophora--dsv-id-fehlt-kurz-vor-spielbeginn)
+
+### Overlays / Backend-Zugang
+
+- Overlay-Konfiguration im AAA: `overlay-true` Parameter gesetzt?
+- Backend-Zugang: Admin-Rechte und Customer-Konfiguration prüfen
+
+---
+
+## Typische Meldungen
+
+| Symptom | Wo nachschauen |
+|---|---|
+| „Falsches Ergebnis" / „Tor falsch zugeordnet" | [Live-Daten Bugs](/support/bugs/live-daten) |
+| „Kader fehlt" / „Aufstellung nicht sichtbar" | [Live-Daten Bugs](/support/bugs/live-daten) |
+| „Audio-Stream nicht im Livecenter" | [NDR-Profil](/support/kunden/ndr) · [Live-Daten Bugs](/support/bugs/live-daten) |
+| „Overlay-Konfiguration" / „Backend-Zugang" | [Widgets & UI Bugs](/support/bugs/widgets-ui) |
